@@ -11,7 +11,7 @@ class StudentProfile(models.Model):
     standard = models.CharField(max_length=2, blank=False)
     guardian_name = models.CharField(max_length=50, blank=False)
     phone = models.CharField(max_length=20, blank=False)
-    student_workbook_list = models.TextField(validators=[validate_comma_separated_integer_list])
+    student_workbook_list = models.TextField(validators=[validate_comma_separated_integer_list], null=True)
     student_school = models.ForeignKey('SchoolProfile', related_name='Student_School', default=None, blank=True,
                                        on_delete=models.CASCADE)
 
@@ -25,7 +25,7 @@ class TeacherProfile(models.Model):
     last_name = models.CharField(max_length=50, blank=False)
     phone = models.CharField(max_length=20, blank=False)
     classes_list = models.TextField(validators=[validate_comma_separated_integer_list])
-    teacher_workbook_list = models.TextField(validators=[validate_comma_separated_integer_list])
+    teacher_workbook_list = models.TextField(validators=[validate_comma_separated_integer_list], null=True)
     teacher_school = models.ForeignKey('SchoolProfile', related_name='Teacher_School', default=None, blank=True,
                                        on_delete=models.CASCADE)
 
@@ -39,6 +39,6 @@ class SchoolProfile(models.Model):
     city = models.CharField(max_length=50, blank=False, default=None)
     state = models.CharField(max_length=50, blank=False, default=None)
     pincode = models.CharField(max_length=10, blank=False, default=None)
-    school_workbook_list = models.TextField(validators=[validate_comma_separated_integer_list])
+    school_workbook_list = models.TextField(validators=[validate_comma_separated_integer_list], null=True)
 
     objects = models.Manager()
