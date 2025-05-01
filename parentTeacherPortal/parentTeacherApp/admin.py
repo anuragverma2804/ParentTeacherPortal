@@ -1,7 +1,8 @@
 from django.contrib import admin
 
 
-from .models import Parent_profile, Teacher_profile
-admin.site.register(Parent_profile)
-admin.site.register(Teacher_profile)
+from .models import StudentProfile, TeacherProfile, SchoolProfile
+admin.site.register(StudentProfile)
+admin.site.register(TeacherProfile)
+admin.site.register(SchoolProfile)
 # Register your models here.
