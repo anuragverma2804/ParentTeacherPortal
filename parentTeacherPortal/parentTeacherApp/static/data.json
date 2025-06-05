@@ -1,0 +1,45 @@
+{
+  "class": 1,
+  "subjects": {
+    "hindi": {
+      "w1": {
+        "chapter 1": ["ex1", "ex2"]
+      },
+      "w2": {
+        "chapter 1": ["ex1", "ex2"]
+      },
+      "w3": {
+        "chapter 1": ["ex1", "ex2"]
+      },
+      "w4": {
+        "chapter 1": ["ex1", "ex2"]
+      },
+      "w5": {
+        "chapter 1": ["ex1", "ex2"]
+      },
+      "w6": {
+        "chapter 1": ["ex1", "ex2"]
+      }
+    },
+    "english": {
+      "w1": {
+        "chapter 1": ["ex1", "ex2"]
+      },
+      "w2": {
+        "chapter 1": ["ex1", "ex2"]
+      },
+      "w3": {
+        "chapter 1": ["ex1", "ex2"]
+      },
+      "w4": {
+        "chapter 1": ["ex1", "ex2"]
+      },
+      "w5": {
+        "chapter 1": ["ex1", "ex2"]
+      },
+      "w6": {
+        "chapter 1": ["ex1", "ex2"]
+      }
+    }
+  }
+}

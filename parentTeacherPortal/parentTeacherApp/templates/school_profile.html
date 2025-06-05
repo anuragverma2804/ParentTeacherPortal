@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js" integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body id="bod1">
+    <div class="row">
+        <div class="d-flex col-sm-2 flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;height:100vh">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                <svg class="bi me-2" width="40" height="32">
+                    <use xlink:href="#bootstrap"></use>
+                </svg>
+                <span class="fs-4">Sidebar</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a id="school_profile_button" href="#" class="nav-link active" aria-current="page">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#home"></use>
+                        </svg>
+                        Profile
+                    </a>
+                </li>
+                <li>
+                    <a id="teacher_requests_button" href="#" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#speedometer2"></use>
+                        </svg>
+                        Teacher Requests {% if SchoolProfile.teacher_requests.count > 0 %}
+                        ({{ SchoolProfile.teacher_requests.count }})
+                        {% endif %}
+                    </a>
+                </li>
+                <li>
+                    <a id="student_requests_button" href="#" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#speedometer2"></use>
+                        </svg>
+                        Student Requests {% if SchoolProfile.student_requests.count > 0 %}
+                        ({{ SchoolProfile.student_requests.count }})
+                        {% endif %}
+                    </a>
+                </li>
+                <li>
+                    <a id="school_teachers_button" href="#" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#speedometer2"></use>
+                        </svg>
+                        Teachers
+                    </a>
+                </li>
+                <li>
+                    <a id="school_add_workbooks_button" href="#" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#speedometer2"></use>
+                        </svg>
+                        Add Workbooks
+                    </a>
+                </li>
+                <li>
+                    <a id="school_assign_workbook_button" href="#" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#speedometer2"></use>
+                        </svg>
+                        Assign Workbook
+                    </a>
+                </li>
+            </ul>
+            <hr>
+            <!--    <div class="dropdown">-->
+            <!--      <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">-->
+            <!--        <img src="" alt="" width="32" height="32" class="rounded-circle me-2">-->
+            <!--        <strong>mdo</strong>-->
+            <!--      </a>-->
+            <!--    </div>-->
+        </div>
+        <div id="school_profile" style="display:block;" class="col  card my-2 py-3 px-3 my-3 mx-3">
+            <h5>School</h5>
+            <div class="row mx-2">
+                <div class="col col-sm-5.5 p-2 card">
+                    <div class="row">
+                        <div class="col col-sm-2 mx-2">
+                            <img style="width: 70px; height:70px;" class="rounded-circle user_img" src="{{SchoolProfile.schoolImg.url}}">
+                        </div>
+                        <div class="col col-sm-9">
+                            <h4>{{SchoolProfile.name}}</h4>
+                            <hr />
+                        </div>
+                        <div class="m-3">
+                            <h7>Email: {{SchoolProfile.email}}</h7><br>
+                            <h7>Phone: {{SchoolProfile.phone}}</h7><br>
+                            <h7>City: {{SchoolProfile.city}}</h7><br>
+                            <h7>State: {{SchoolProfile.state}}</h7><br>
+                            <a href="/edit_school/{{SchoolProfile.user.id}}"><i><small>Edit School</small></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="teacher_request" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
+            <h5>Teacher Requests</h5>
+            <div class="row mx-2">
+                <div class="col col-sm-5.5 p-2 card">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            {% if SchoolProfile.teacher_requests.count > 0 %}
+                            {% for i in SchoolProfile.teacher_requests.all %}
+                            <div class="col col-sm-2 mx-2">
+                                <img style="width: 70px; height:70px;" class="rounded-circle user_img" src="{{i.TeacherProfile.teacherImg.url}}">
+                            </div>
+                            <p class="card-text">{{i.TeacherProfile.first_name}} {{i.TeacherProfile.last_name}}</p>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                </div>
+                                <div class="col-sm-2">
+                                    <button id="teacher_request_accept" value="{{i.id}}" class="btn btn-primary">Accept</button>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button id="teacher_request_decline" value="{{i.id}}" class="btn btn-primary">Decline</button>
+                                </div>
+                                <div class="col-sm-4">
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <h5 class="card-title">No Request</h5>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="student_request" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
+            <h5>Student Requests</h5>
+            <div class="row mx-2">
+                <div class="col col-sm-5.5 p-2 card">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            {% if SchoolProfile.student_requests.count > 0 %}
+                            {% for i in SchoolProfile.student_requests.all %}
+                            <div class="col col-sm-2 mx-2">
+                                <img style="width: 70px; height:70px;" class="rounded-circle user_img" src="{{i.StudentProfile.studentImg.url}}">
+                            </div>
+                            {{i.username}}
+                            <p class="card-text">{{i.StudentProfile.first_name}} {{i.StudentProfile.last_name}}</p>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                </div>
+                                <div class="col-sm-2">
+                                    <button id="student_request_accept" value="{{i.id}}" class="btn btn-primary">Accept</button>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button id="student_request_decline" value="{{i.id}}" class="btn btn-primary">Decline</button>
+                                </div>
+                                <div class="col-sm-4">
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <h5 class="card-title">No Request</h5>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="school_teachers" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
+            <h5>Teachers</h5>
+            <div class="row mx-2">
+                <div class="col col-sm-5.5 p-2 card">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            {% if SchoolProfile.teachers.count > 0 %}
+                            {% for i in SchoolProfile.teachers.all %}
+                            <div class="card my-2 mx-2 px-2 py-2">
+                                <div class="row">
+                                    <div class="col col-sm-2 mx-2">
+                                        <img style="width: 70px; height:70px;" class="rounded-circle user_img" src="{{SchoolProfile.schoolImg.url}}">
+                                    </div>
+                                    <div class="col col-sm-9">
+                                        <h5>{{i.TeacherProfile.first_name}} {{i.TeacherProfile.last_name}}</h5>
+                                        <hr />
+                                        <div class="row">
+                                            <div class="col"></div>
+                                            <div class="col"></div>
+                                            <div class="col-sm-4"></div>
+                                            <div class="col-sm-4"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <h5 class="card-title">No Teacher</h5>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="add_workbooks" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
+            <h5>Add Workbooks</h5>
+            <div class="row mx-2">
+                <div class="col col-sm-5.5 p-2 card">
+                    <div class="input-group mb-3">
+                        <div class="input-group-text">
+                            <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input">
+                        </div>
+                        <span class="input-group-text">Workbook 1</span>
+                    </div>
+                </div>
+            </div>
+            <button style="width: -webkit-fill-available;" type="button" class="btn btn-primary mx-2 my-2">Add</button>
+        </div>
+        <div id="assign_workbook" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
+            <h5 style="text-align:center;">Assign Workbook</h5>
+            <div class="row mx-2">
+                <div class="col-sm-2 "></div>
+                <div class="col col-sm-4 p-2">
+                    <select class="form-select" aria-label="Default select example">
+                        {% if SchoolProfile.teachers.count > 0 %}
+                        {% for i in SchoolProfile.teachers.all %}
+                        <option value="{{i.teachers.teacher_id}}">{{i.TeacherProfile.first_name}} {{i.TeacherProfile.last_name}}</option>
+                        {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="col col-sm-4 p-2">
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected>Workbook</option>
+                        <option value="1">Workbook 1</option>
+                    </select>
+                </div>
+                <div class="col-sm-2 "></div>
+            </div>
+            <button style="position:absolute;right:46%" type="button" class="btn btn-primary mx-2 my-2">Assign</button>
+        </div>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script>
+$(document).on('click', '#school_profile_button', function(event) {
+    document.getElementById("school_profile").style.display = "block";
+    document.getElementById("teacher_request").style.display = "none";
+    document.getElementById("student_request").style.display = "none";
+    document.getElementById("school_teachers").style.display = "none";
+    document.getElementById("add_workbooks").style.display = "none";
+    document.getElementById("assign_workbook").style.display = "none";
+
+    document.getElementById("school_profile_button").className = "nav-link active";
+    document.getElementById("teacher_requests_button").className = "nav-link link-dark";
+    document.getElementById("student_requests_button").className = "nav-link link-dark";
+    document.getElementById("school_teachers_button").className = "nav-link link-dark";
+    document.getElementById("school_add_workbooks_button").className = "nav-link link-dark";
+    document.getElementById("school_assign_workbook_button").className = "nav-link link-dark";
+
+});
+$(document).on('click', '#teacher_requests_button', function(event) {
+    document.getElementById("school_profile").style.display = "none";
+    document.getElementById("teacher_request").style.display = "block";
+    document.getElementById("student_request").style.display = "none";
+    document.getElementById("school_teachers").style.display = "none";
+    document.getElementById("add_workbooks").style.display = "none";
+    document.getElementById("assign_workbook").style.display = "none";
+
+    document.getElementById("school_profile_button").className = "nav-link link-dark";
+    document.getElementById("teacher_requests_button").className = "nav-link active";
+    document.getElementById("student_requests_button").className = "nav-link link-dark";
+    document.getElementById("school_teachers_button").className = "nav-link link-dark";
+    document.getElementById("school_add_workbooks_button").className = "nav-link link-dark";
+    document.getElementById("school_assign_workbook_button").className = "nav-link link-dark";
+
+});
+$(document).on('click', '#student_requests_button', function(event) {
+    document.getElementById("school_profile").style.display = "none";
+    document.getElementById("teacher_request").style.display = "none";
+    document.getElementById("student_request").style.display = "block";
+    document.getElementById("school_teachers").style.display = "none";
+    document.getElementById("add_workbooks").style.display = "none";
+    document.getElementById("assign_workbook").style.display = "none";
+
+    document.getElementById("school_profile_button").className = "nav-link link-dark";
+    document.getElementById("teacher_requests_button").className = "nav-link link-dark";
+    document.getElementById("student_requests_button").className = "nav-link active";
+    document.getElementById("school_teachers_button").className = "nav-link link-dark";
+    document.getElementById("school_add_workbooks_button").className = "nav-link link-dark";
+    document.getElementById("school_assign_workbook_button").className = "nav-link link-dark";
+
+});
+$(document).on('click', '#school_teachers_button', function(event) {
+    document.getElementById("school_profile").style.display = "none";
+    document.getElementById("teacher_request").style.display = "none";
+    document.getElementById("student_request").style.display = "none";
+    document.getElementById("student_request").style.display = "none";
+    document.getElementById("school_teachers").style.display = "block";
+    document.getElementById("add_workbooks").style.display = "none";
+    document.getElementById("assign_workbook").style.display = "none";
+
+    document.getElementById("school_profile_button").className = "nav-link link-dark";
+    document.getElementById("teacher_requests_button").className = "nav-link link-dark";
+    document.getElementById("student_requests_button").className = "nav-link link-dark";
+    document.getElementById("school_teachers_button").className = "nav-link active";
+    document.getElementById("school_add_workbooks_button").className = "nav-link link-dark";
+    document.getElementById("school_assign_workbook_button").className = "nav-link link-dark";
+
+});
+$(document).on('click', '#school_add_workbooks_button', function(event) {
+    document.getElementById("school_profile").style.display = "none";
+    document.getElementById("teacher_request").style.display = "none";
+    document.getElementById("student_request").style.display = "none";
+    document.getElementById("school_teachers").style.display = "none";
+    document.getElementById("add_workbooks").style.display = "block";
+    document.getElementById("assign_workbook").style.display = "none";
+
+    document.getElementById("school_profile_button").className = "nav-link link-dark";
+    document.getElementById("teacher_requests_button").className = "nav-link link-dark";
+    document.getElementById("student_requests_button").className = "nav-link link-dark";
+    document.getElementById("school_teachers_button").className = "nav-link link-dark";
+    document.getElementById("school_add_workbooks_button").className = "nav-link active";
+    document.getElementById("school_assign_workbook_button").className = "nav-link link-dark";
+
+});
+$(document).on('click', '#school_assign_workbook_button', function(event) {
+    document.getElementById("school_profile").style.display = "none";
+    document.getElementById("teacher_request").style.display = "none";
+    document.getElementById("student_request").style.display = "none";
+    document.getElementById("school_teachers").style.display = "none";
+    document.getElementById("add_workbooks").style.display = "none";
+    document.getElementById("assign_workbook").style.display = "block";
+
+    document.getElementById("school_profile_button").className = "nav-link link-dark";
+    document.getElementById("teacher_requests_button").className = "nav-link link-dark";
+    document.getElementById("student_requests_button").className = "nav-link link-dark";
+    document.getElementById("school_teachers_button").className = "nav-link link-dark";
+    document.getElementById("school_add_workbooks_button").className = "nav-link link-dark";
+    document.getElementById("school_assign_workbook_button").className = "nav-link active";
+
+});
+$(document).on('click', '#school_profile_button', function(event) {
+
+});
+
+$(document).on('click', '#teacher_request_accept', function(event) {
+    event.preventDefault();
+    console.log($(this).val());
+    var ldata = {
+        'user_id': $(this).val(),
+
+    };
+    $.ajax({
+            type: 'POST',
+            url: '/accept_request',
+            data: ldata,
+            encode: true
+        })
+        .done(function(id) {
+            $("#bod1").load(" #bod1");
+
+        })
+});
+$(document).on('click', '#teacher_request_decline', function(event) {
+    event.preventDefault();
+    console.log($(this).val());
+
+    var ldata = {
+        'user_id': $(this).val(),
+
+    };
+    $.ajax({
+            type: 'POST',
+            url: '/remove_requests',
+            data: ldata,
+            encode: true
+        })
+        .done(function(id) {
+            $("#divid").load(" #divid");
+
+        })
+});
+$(document).on('click', '#student_request_accept', function(event) {
+    event.preventDefault();
+    console.log($(this).val());
+
+    var ldata = {
+        'user_id': $(this).val(),
+
+    };
+    $.ajax({
+            type: 'POST',
+            url: '/accept_request',
+            data: ldata,
+            encode: true
+        })
+        .done(function(id) {
+            $("#divid").load(" #divid");
+
+        })
+});
+$(document).on('click', '#student_request_decline', function(event) {
+    event.preventDefault();
+    console.log($(this).val());
+
+    var ldata = {
+        'user_id': $(this).val(),
+
+    };
+    $.ajax({
+            type: 'POST',
+            url: '/remove_requests',
+            data: ldata,
+            encode: true
+        })
+        .done(function(id) {
+            $("#divid").load(" #divid");
+
+        })
+});
+</script>
+
+</html>

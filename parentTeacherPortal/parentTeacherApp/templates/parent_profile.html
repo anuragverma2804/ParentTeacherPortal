@@ -1,10 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js" integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <meta charset="UTF-8">
     <title>Parent ||</title>
 </head>
+
 <body>
-<h1>Parent Profile</h1>
+    <div class="row">
+        <div class="d-flex col-sm-2 flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;height:100vh">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                <svg class="bi me-2" width="40" height="32">
+                    <use xlink:href="#bootstrap"></use>
+                </svg>
+                <span class="fs-4">Sidebar</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a id="student_profile_button" href="#" class="nav-link active" aria-current="page">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#home"></use>
+                        </svg>
+                        Profile
+                    </a>
+                </li>
+                <li>
+                    <a id="student_assignment_button" href="#" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#speedometer2"></use>
+                        </svg>
+                        Assignments
+                    </a>
+                </li>
+            </ul>
+            <hr>
+            <!--    <div class="dropdown">-->
+            <!--      <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">-->
+            <!--        <img src="" alt="" width="32" height="32" class="rounded-circle me-2">-->
+            <!--        <strong>mdo</strong>-->
+            <!--      </a>-->
+            <!--    </div>-->
+        </div>
+        <div id="student_profile" style="display:block;" class="col  card my-2 py-3 px-3 my-3 mx-3">
+            <h5>Student</h5>
+            <div class="row mx-2">
+                <div class="col col-sm-5.5 p-2 card">
+                    <div class="row">
+                        <div class="col col-sm-2 mx-2">
+                            <img style="width: 70px; height:70px;" class="rounded-circle user_img" src="{{request.user.StudentProfile.studentImg.url}}">
+                        </div>
+                        <div class="col col-sm-9">
+                            <h4>{{request.user.StudentProfile.first_name}} {{request.user.StudentProfile.last_name}}</h4>
+                            <hr />
+                        </div>
+                        <div class="m-3">
+                            <a href="/edit_student/{{request.user.id}}"><i><small>Edit Profile</small></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="student_assignment" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
+            <h5>Tasks</h5>
+            <div class="row mx-2">
+                <div class="col col-sm-5.5 p-2 card">
+                    <div class="row">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script>
+$(document).on('click', '#student_profile_button', function(event) {
+  console.log("d");
+    document.getElementById("student_profile").style.display = "block";
+    document.getElementById("student_assignment").style.display = "none";
+
+    document.getElementById("student_profile_button").className = "nav-link active";
+    document.getElementById("student_assignment_button").className = "nav-link link-dark";
+
+});
+$(document).on('click', '#student_assignment_button', function(event) {
+    document.getElementById("student_profile").style.display = "none";
+    document.getElementById("student_assignment").style.display = "block";
+
+    document.getElementById("student_profile_button").className = "nav-link link-dark";
+    document.getElementById("student_assignment_button").className = "nav-link active";
+});
+</script>
 </html>

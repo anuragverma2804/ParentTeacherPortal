@@ -1,10 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <meta charset="UTF-8">
     <title>Teacher ||</title>
 </head>
+
 <body>
-<h1>Teacher profile</h1>
+    <div class="row">
+        <div class=" col-sm-2 d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;height:100vh">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                <svg class="bi me-2" width="40" height="32">
+                    <use xlink:href="#bootstrap"></use>
+                </svg>
+                <span class="fs-4">Sidebar</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a id="teacher_profile_button" href="#" class="nav-link active" aria-current="page">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#home"></use>
+                        </svg>
+                        Profile
+                    </a>
+                </li>
+                <li>
+                    <a id="teacher_assignment_button" href="#" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#grid"></use>
+                        </svg>
+                        Assignments
+                    </a>
+                </li>
+            </ul>
+            <hr>
+            <!--    <div class="dropdown">-->
+            <!--      <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">-->
+            <!--        <img src="" alt="" width="32" height="32" class="rounded-circle me-2">-->
+            <!--        <strong>mdo</strong>-->
+            <!--      </a>-->
+            <!--    </div>-->
+        </div>
+        <div id="teacher_profile" style="display:block;" class="col  card my-2 py-3 px-3 my-3 mx-3">
+            <h5>Teacher</h5>
+            <div class="row mx-2">
+                <div class="col col-sm-5.5 p-2 card">
+                    <div class="row">
+                        <div class="col col-sm-2 mx-2">
+                            <img style="width: 70px; height:70px;" class="rounded-circle user_img" src="{{data.TeacherProfile.teacherImg.url}}">
+                        </div>
+                        <div class="col col-sm-9">
+                            <h4>{{data.TeacherProfile.name}}</h4>
+                            <hr />
+                        </div>
+                        <div class="m-3">
+                            <a href="/edit_teacher/{{data.TeacherProfile.user.id}}"><i><small>Edit Profile</small></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="teacher_assignment" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
+            <h5>Assignment</h5>
+            <div class="row mx-2">
+                <div class="col col-sm-5.5 p-2 card">
+                    <div class="row">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script>
+$(document).on('click', '#teacher_profile_button', function(event) {
+    document.getElementById("teacher_profile").style.display = "block";
+    document.getElementById("teacher_assignment").style.display = "none";
+
+    document.getElementById("teacher_profile_button").className = "nav-link active";
+    document.getElementById("teacher_assignment_button").className = "nav-link link-dark";
+
+});
+$(document).on('click', '#teacher_assignment_button', function(event) {
+    document.getElementById("teacher_profile").style.display = "none";
+    document.getElementById("teacher_assignment").style.display = "block";
+
+    document.getElementById("teacher_profile_button").className = "nav-link link-dark";
+    document.getElementById("teacher_assignment_button").className = "nav-link active";
+});
+</script>
+
 </html>

@@ -1,59 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
 
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <meta charset="UTF-8">
     <title>Log In</title>
 </head>
+
 <body>
-<div style="display: flex;justify-content: center;" class="mt-5">
-    <form action="/login" method="post" id="form">{% csrf_token %}
-                    <label class="form-label" >Role</label>
-        <select class="form-select mb-4" aria-label="Default select example"   name="role" >
-  <option  value="teacher">Teacher</option>
-  <option  value="parent">Parent</option>
-</select>
-        <!-- Email input -->
-        <div class="form-outline mb-4">
-            <label class="form-label" for="email">Email Address</label>
-            <input type="email" id="email" class="form-control" required name="email" />
-        </div>
-        <!-- Password input -->
-        <div class="form-outline mb-4">
-            <label class="form-label" for="pass">Password</label>
-            <input type="password" id="pass" class="form-control" required name="pass" />
-
-        </div>
-        <!-- 2 column grid layout for inline styling -->
-        <div class="row mb-4">
-            <div class="col">
-                <!-- Simple link -->
-                <a href="#!">Forgot password?</a>
+    <div style="display: flex;justify-content: center;" class="mt-5">
+        <form action="/login" method="post" id="form">{% csrf_token %}
+            <label class="form-label">Role</label>
+            <select id="role_select" class="form-select mb-4" aria-label="Default select example" name="role">
+                <option value="teacher">Teacher</option>
+                <option value="student">Student</option>
+                <option value="school">School</option>
+            </select>
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="email">Email Address</label>
+                <input type="email" id="email" class="form-control" required name="email" />
             </div>
-        </div>
-        <!-- Submit button -->
-        <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
-        <!-- Register buttons -->
-        <div class="text-center">
-            <p>Not a member? <a href="/signup">Register</a></p>
-            <p>or sign up with:</p>
-            <button type="button" class="btn btn-primary btn-floating mx-1">
-                <i class="fab fa-facebook-f"></i>
-            </button>
-            <button type="button" class="btn btn-primary btn-floating mx-1">
-                <i class="fab fa-google"></i>
-            </button>
-            <button type="button" class="btn btn-primary btn-floating mx-1">
-                <i class="fab fa-twitter"></i>
-            </button>
-            <button type="button" class="btn btn-primary btn-floating mx-1">
-                <i class="fab fa-github"></i>
-            </button>
-        </div>
-    </form>
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="pass">Password</label>
+                <input type="password" id="pass" class="form-control" required name="pass" />
+            </div>
+            <!-- 2 column grid layout for inline styling -->
+            <div class="row mb-4">
+                <div class="col">
+                    <!-- Simple link -->
+                    <a href="#!">Forgot password?</a>
+                </div>
+            </div>
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
+            <!-- Register buttons -->
+            <div class="text-center">
+                <p>Not a member? <a href="/signup">Register</a></p>
+                <p>or sign up with:</p>
+                <button type="button" class="btn btn-primary btn-floating mx-1">
+                    <i class="fab fa-facebook-f"></i>
+                </button>
+                <button type="button" class="btn btn-primary btn-floating mx-1">
+                    <i class="fab fa-google"></i>
+                </button>
+                <button type="button" class="btn btn-primary btn-floating mx-1">
+                    <i class="fab fa-twitter"></i>
+                </button>
+                <button type="button" class="btn btn-primary btn-floating mx-1">
+                    <i class="fab fa-github"></i>
+                </button>
+            </div>
+        </form>
     </div>
-
-</href>
 </body>
+
 </html>
