@@ -29,23 +29,22 @@
                         Profile
                     </a>
                 </li>
-                <li>
+<!--                 <li>
                     <a id="teacher_requests_button" href="#" class="nav-link link-dark">
                         <svg class="bi me-2" width="16" height="16">
                             <use xlink:href="#speedometer2"></use>
                         </svg>
-                        Teacher Requests {% if SchoolProfile.teacher_requests.count > 0 %}
-                        ({{ SchoolProfile.teacher_requests.count }})
-                        {% endif %}
+                        Teacher Requests 
+                        
                     </a>
-                </li>
+                </li> -->
                 <li>
                     <a id="student_requests_button" href="#" class="nav-link link-dark">
                         <svg class="bi me-2" width="16" height="16">
                             <use xlink:href="#speedometer2"></use>
                         </svg>
-                        Student Requests {% if SchoolProfile.student_requests.count > 0 %}
-                        ({{ SchoolProfile.student_requests.count }})
+                        Student Requests {% if request.user.SchoolProfile.student_requests.count > 0 %}
+                        ({{ request.user.SchoolProfile.student_requests.count }})
                         {% endif %}
                     </a>
                 </li>
@@ -73,8 +72,17 @@
                         Assign Workbook
                     </a>
                 </li>
+                <li>
+                    <a id="school_assign_class_subject_button" href="#" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#speedometer2"></use>
+                        </svg>
+                        Assign Class/Subject
+                    </a>
+                </li>
             </ul>
             <hr>
+            <a href="/logout_user">Logout</a>
             <!--    <div class="dropdown">-->
             <!--      <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">-->
             <!--        <img src="" alt="" width="32" height="32" class="rounded-circle me-2">-->
@@ -91,48 +99,15 @@
                             <img style="width: 70px; height:70px;" class="rounded-circle user_img" src="{{SchoolProfile.schoolImg.url}}">
                         </div>
                         <div class="col col-sm-9">
-                            <h4>{{SchoolProfile.name}}</h4>
+                            <h4>{{request.user.SchoolProfile.name}}</h4>
                             <hr />
                         </div>
                         <div class="m-3">
-                            <h7>Email: {{SchoolProfile.email}}</h7><br>
-                            <h7>Phone: {{SchoolProfile.phone}}</h7><br>
-                            <h7>City: {{SchoolProfile.city}}</h7><br>
-                            <h7>State: {{SchoolProfile.state}}</h7><br>
+                            <h7>Email: {{request.user.SchoolProfile.email}}</h7><br>
+                            <h7>Phone: {{request.user.SchoolProfile.phone}}</h7><br>
+                            <h7>City: {{request.user.SchoolProfile.city}}</h7><br>
+                            <h7>State: {{request.user.SchoolProfile.state}}</h7><br>
                             <a href="/edit_school/{{SchoolProfile.user.id}}"><i><small>Edit School</small></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="teacher_request" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
-            <h5>Teacher Requests</h5>
-            <div class="row mx-2">
-                <div class="col col-sm-5.5 p-2 card">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            {% if SchoolProfile.teacher_requests.count > 0 %}
-                            {% for i in SchoolProfile.teacher_requests.all %}
-                            <div class="col col-sm-2 mx-2">
-                                <img style="width: 70px; height:70px;" class="rounded-circle user_img" src="{{i.TeacherProfile.teacherImg.url}}">
-                            </div>
-                            <p class="card-text">{{i.TeacherProfile.first_name}} {{i.TeacherProfile.last_name}}</p>
-                            <div class="row">
-                                <div class="col-sm-4">
-                                </div>
-                                <div class="col-sm-2">
-                                    <button id="teacher_request_accept" value="{{i.id}}" class="btn btn-primary">Accept</button>
-                                </div>
-                                <div class="col-sm-2">
-                                    <button id="teacher_request_decline" value="{{i.id}}" class="btn btn-primary">Decline</button>
-                                </div>
-                                <div class="col-sm-4">
-                                </div>
-                            </div>
-                            {% endfor %}
-                            {% else %}
-                            <h5 class="card-title">No Request</h5>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -144,8 +119,8 @@
                 <div class="col col-sm-5.5 p-2 card">
                     <div class="card text-center">
                         <div class="card-body">
-                            {% if SchoolProfile.student_requests.count > 0 %}
-                            {% for i in SchoolProfile.student_requests.all %}
+                            {% if request.user.SchoolProfile.student_requests.count > 0 %}
+                            {% for i in request.user.SchoolProfile.student_requests.all %}
                             <div class="col col-sm-2 mx-2">
                                 <img style="width: 70px; height:70px;" class="rounded-circle user_img" src="{{i.StudentProfile.studentImg.url}}">
                             </div>
@@ -174,26 +149,77 @@
         </div>
         <div id="school_teachers" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
             <h5>Teachers</h5>
+            {% if request.user.SchoolProfile.teacher_requests.count > 0 %}
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                Requests ({{ request.user.SchoolProfile.teacher_requests.count }})
+            </button>
+            <div class="collapse" id="collapseExample">
+                    <div id="teacher_request" class="col  card my-2 py-3 px-3 my-3 mx-3">
+                        <h5>Teacher Requests</h5>
+                        <div class="row mx-2">
+                            <div class="col col-sm-5.5 p-2 ">
+                                <div class="card text-center">
+                                    <div class="card-body">
+                                        {% if request.user.SchoolProfile.teacher_requests.count > 0 %}
+                                        {% for i in request.user.SchoolProfile.teacher_requests.all %}
+                                        <div class="col col-sm-2 mx-2">
+                                            <img style="width: 70px; height:70px;" class="rounded-circle user_img" src="{{i.TeacherProfile.teacherImg.url}}">
+                                        </div>
+                                        <p class="card-text">{{i.TeacherProfile.first_name}} {{i.TeacherProfile.last_name}}</p>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button id="teacher_request_accept" value="{{i.id}}" class="btn btn-primary">Accept</button>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button id="teacher_request_decline" value="{{i.id}}" class="btn btn-primary">Decline</button>
+                                            </div>
+                                            <div class="col-sm-4">
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                        {% else %}
+                                        <h5 class="card-title">No Request</h5>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+                        {% endif %}
+
+
             <div class="row mx-2">
                 <div class="col col-sm-5.5 p-2 card">
                     <div class="card text-center">
                         <div class="card-body">
-                            {% if SchoolProfile.teachers.count > 0 %}
-                            {% for i in SchoolProfile.teachers.all %}
+                            {% if request.user.SchoolProfile.teachers.count > 0 %}
+                            {% for i in request.user.SchoolProfile.teachers.all %}
                             <div class="card my-2 mx-2 px-2 py-2">
                                 <div class="row">
                                     <div class="col col-sm-2 mx-2">
-                                        <img style="width: 70px; height:70px;" class="rounded-circle user_img" src="{{SchoolProfile.schoolImg.url}}">
+                                        <img style="width: 60px; height:60px;" class="rounded-circle user_img" src="{{SchoolProfile.schoolImg.url}}">
                                     </div>
-                                    <div class="col col-sm-9">
+                                    <div class="col col-sm-8">
+                                        {{i.is_active}}
                                         <h5>{{i.TeacherProfile.first_name}} {{i.TeacherProfile.last_name}}</h5>
                                         <hr />
+                                        {% for key, value in i.TeacherProfile.class_subject_map.items %}
                                         <div class="row">
                                             <div class="col"></div>
                                             <div class="col"></div>
-                                            <div class="col-sm-4"></div>
-                                            <div class="col-sm-4"></div>
+                                            <div class="col-sm-4">{{ key }}</div>
+                                            <div class="col-sm-4">{{ value }}</div>
                                         </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="col col-sm-2">
+                                        <button id="remove_teacher" value="{{i.id}}" class="btn btn-primary">Remove</button>
+                                    </div>
+                                    <div class="col col-sm-2">
+                                        <a href="/edit_teacher/{{i.id}}" class="btn btn-primary">Edit</a>
                                     </div>
                                 </div>
                             </div>
@@ -226,8 +252,8 @@
                 <div class="col-sm-2 "></div>
                 <div class="col col-sm-4 p-2">
                     <select class="form-select" aria-label="Default select example">
-                        {% if SchoolProfile.teachers.count > 0 %}
-                        {% for i in SchoolProfile.teachers.all %}
+                        {% if request.user.SchoolProfile.teachers.count > 0 %}
+                        {% for i in request.user.SchoolProfile.teachers.all %}
                         <option value="{{i.teachers.teacher_id}}">{{i.TeacherProfile.first_name}} {{i.TeacherProfile.last_name}}</option>
                         {% endfor %}
                         {% endif %}
@@ -243,108 +269,186 @@
             </div>
             <button style="position:absolute;right:46%" type="button" class="btn btn-primary mx-2 my-2">Assign</button>
         </div>
+        <div id="assign_class_subject" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
+            <h5 style="text-align:center;">Assign Class/Subject</h5>
+            <div class="row mx-2">
+                <div class="col col-sm-4 p-2">
+                    <select id="teacher" class="form-select" aria-label="Default select example">
+                        {% if request.user.SchoolProfile.teachers.count > 0 %}
+                        {% for i in request.user.SchoolProfile.teachers.all %}
+                        <option value="{{i.TeacherProfile.teacher_id}}">{{i.TeacherProfile.first_name}} {{i.TeacherProfile.last_name}}</option>
+                        {% endfor %}
+                        {% endif %}
+                    </select>
+                </div>
+                <div class="col col-sm-4 p-2">
+                    <select id="standard" class="form-select" aria-label="Default select example">
+                        <option disabled selected>Class</option>
+                        <option value="I">I</option>
+                        <option value="II">II</option>
+                        <option value="III">III</option>
+                        <option value="IV">IV</option>
+                        <option value="V">V</option>
+                        <option value="VI">VI</option>
+                        <option value="VII">VII</option>
+                        <option value="VIII">VIII</option>
+                        <option value="IX">IX</option>
+                        <option value="X">X</option>
+                        <option value="XI">XI</option>
+                        <option value="XII">XII</option>
+                    </select>
+                </div>
+                <div class="col col-sm-4 p-2">
+                    <select id="subject" class="form-select" aria-label="Default select example">
+                    </select>
+                </div>
+                <div class="col-sm-2 "></div>
+            </div>
+            <button id="assign_class_subject_submit_button" style="position:absolute;right:46%" type="button" class="btn btn-primary mx-2 my-2">Assign</button>
+        </div>
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script>
 $(document).on('click', '#school_profile_button', function(event) {
     document.getElementById("school_profile").style.display = "block";
-    document.getElementById("teacher_request").style.display = "none";
+    // document.getElementById("teacher_request").style.display = "none";
     document.getElementById("student_request").style.display = "none";
     document.getElementById("school_teachers").style.display = "none";
     document.getElementById("add_workbooks").style.display = "none";
     document.getElementById("assign_workbook").style.display = "none";
+    document.getElementById("assign_class_subject").style.display = "none";
+
 
     document.getElementById("school_profile_button").className = "nav-link active";
-    document.getElementById("teacher_requests_button").className = "nav-link link-dark";
+    // document.getElementById("teacher_requests_button").className = "nav-link link-dark";
     document.getElementById("student_requests_button").className = "nav-link link-dark";
     document.getElementById("school_teachers_button").className = "nav-link link-dark";
     document.getElementById("school_add_workbooks_button").className = "nav-link link-dark";
     document.getElementById("school_assign_workbook_button").className = "nav-link link-dark";
+    document.getElementById("school_assign_class_subject_button").className = "nav-link link-dark";
+
 
 });
 $(document).on('click', '#teacher_requests_button', function(event) {
     document.getElementById("school_profile").style.display = "none";
-    document.getElementById("teacher_request").style.display = "block";
+    // document.getElementById("teacher_request").style.display = "block";
     document.getElementById("student_request").style.display = "none";
     document.getElementById("school_teachers").style.display = "none";
     document.getElementById("add_workbooks").style.display = "none";
     document.getElementById("assign_workbook").style.display = "none";
+    document.getElementById("assign_class_subject").style.display = "none";
+
 
     document.getElementById("school_profile_button").className = "nav-link link-dark";
-    document.getElementById("teacher_requests_button").className = "nav-link active";
+    // document.getElementById("teacher_requests_button").className = "nav-link active";
     document.getElementById("student_requests_button").className = "nav-link link-dark";
     document.getElementById("school_teachers_button").className = "nav-link link-dark";
     document.getElementById("school_add_workbooks_button").className = "nav-link link-dark";
     document.getElementById("school_assign_workbook_button").className = "nav-link link-dark";
+    document.getElementById("school_assign_class_subject_button").className = "nav-link link-dark";
+
 
 });
 $(document).on('click', '#student_requests_button', function(event) {
     document.getElementById("school_profile").style.display = "none";
-    document.getElementById("teacher_request").style.display = "none";
+    // document.getElementById("teacher_request").style.display = "none";
     document.getElementById("student_request").style.display = "block";
     document.getElementById("school_teachers").style.display = "none";
     document.getElementById("add_workbooks").style.display = "none";
     document.getElementById("assign_workbook").style.display = "none";
+    document.getElementById("assign_class_subject").style.display = "none";
+
 
     document.getElementById("school_profile_button").className = "nav-link link-dark";
-    document.getElementById("teacher_requests_button").className = "nav-link link-dark";
+    // document.getElementById("teacher_requests_button").className = "nav-link link-dark";
     document.getElementById("student_requests_button").className = "nav-link active";
     document.getElementById("school_teachers_button").className = "nav-link link-dark";
     document.getElementById("school_add_workbooks_button").className = "nav-link link-dark";
     document.getElementById("school_assign_workbook_button").className = "nav-link link-dark";
+    document.getElementById("school_assign_class_subject_button").className = "nav-link link-dark";
+
 
 });
 $(document).on('click', '#school_teachers_button', function(event) {
     document.getElementById("school_profile").style.display = "none";
-    document.getElementById("teacher_request").style.display = "none";
+    // document.getElementById("teacher_request").style.display = "none";
     document.getElementById("student_request").style.display = "none";
     document.getElementById("student_request").style.display = "none";
     document.getElementById("school_teachers").style.display = "block";
     document.getElementById("add_workbooks").style.display = "none";
     document.getElementById("assign_workbook").style.display = "none";
+    document.getElementById("assign_class_subject").style.display = "none";
+
 
     document.getElementById("school_profile_button").className = "nav-link link-dark";
-    document.getElementById("teacher_requests_button").className = "nav-link link-dark";
+    // document.getElementById("teacher_requests_button").className = "nav-link link-dark";
     document.getElementById("student_requests_button").className = "nav-link link-dark";
     document.getElementById("school_teachers_button").className = "nav-link active";
     document.getElementById("school_add_workbooks_button").className = "nav-link link-dark";
     document.getElementById("school_assign_workbook_button").className = "nav-link link-dark";
+    document.getElementById("school_assign_class_subject_button").className = "nav-link link-dark";
+
 
 });
 $(document).on('click', '#school_add_workbooks_button', function(event) {
     document.getElementById("school_profile").style.display = "none";
-    document.getElementById("teacher_request").style.display = "none";
+    // document.getElementById("teacher_request").style.display = "none";
     document.getElementById("student_request").style.display = "none";
     document.getElementById("school_teachers").style.display = "none";
     document.getElementById("add_workbooks").style.display = "block";
     document.getElementById("assign_workbook").style.display = "none";
+    document.getElementById("assign_class_subject").style.display = "none";
+
 
     document.getElementById("school_profile_button").className = "nav-link link-dark";
-    document.getElementById("teacher_requests_button").className = "nav-link link-dark";
+    // document.getElementById("teacher_requests_button").className = "nav-link link-dark";
     document.getElementById("student_requests_button").className = "nav-link link-dark";
     document.getElementById("school_teachers_button").className = "nav-link link-dark";
     document.getElementById("school_add_workbooks_button").className = "nav-link active";
     document.getElementById("school_assign_workbook_button").className = "nav-link link-dark";
+    document.getElementById("school_assign_class_subject_button").className = "nav-link link-dark";
+
 
 });
 $(document).on('click', '#school_assign_workbook_button', function(event) {
     document.getElementById("school_profile").style.display = "none";
-    document.getElementById("teacher_request").style.display = "none";
+    // document.getElementById("teacher_request").style.display = "none";
     document.getElementById("student_request").style.display = "none";
     document.getElementById("school_teachers").style.display = "none";
     document.getElementById("add_workbooks").style.display = "none";
     document.getElementById("assign_workbook").style.display = "block";
+    document.getElementById("assign_class_subject").style.display = "none";
+
 
     document.getElementById("school_profile_button").className = "nav-link link-dark";
-    document.getElementById("teacher_requests_button").className = "nav-link link-dark";
+    // document.getElementById("teacher_requests_button").className = "nav-link link-dark";
     document.getElementById("student_requests_button").className = "nav-link link-dark";
     document.getElementById("school_teachers_button").className = "nav-link link-dark";
     document.getElementById("school_add_workbooks_button").className = "nav-link link-dark";
     document.getElementById("school_assign_workbook_button").className = "nav-link active";
+    document.getElementById("school_assign_class_subject_button").className = "nav-link link-dark";
+
 
 });
-$(document).on('click', '#school_profile_button', function(event) {
+$(document).on('click', '#school_assign_class_subject_button', function(event) {
+    document.getElementById("school_profile").style.display = "none";
+    // document.getElementById("teacher_request").style.display = "none";
+    document.getElementById("student_request").style.display = "none";
+    document.getElementById("school_teachers").style.display = "none";
+    document.getElementById("add_workbooks").style.display = "none";
+    document.getElementById("assign_workbook").style.display = "none";
+    document.getElementById("assign_class_subject").style.display = "block";
+
+
+    document.getElementById("school_profile_button").className = "nav-link link-dark";
+    // document.getElementById("teacher_requests_button").className = "nav-link link-dark";
+    document.getElementById("student_requests_button").className = "nav-link link-dark";
+    document.getElementById("school_teachers_button").className = "nav-link link-dark";
+    document.getElementById("school_add_workbooks_button").className = "nav-link link-dark";
+    document.getElementById("school_assign_workbook_button").className = "nav-link link-dark";
+    document.getElementById("school_assign_class_subject_button").className = "nav-link active";
+
 
 });
 
@@ -362,7 +466,9 @@ $(document).on('click', '#teacher_request_accept', function(event) {
             encode: true
         })
         .done(function(id) {
-            $("#bod1").load(" #bod1");
+            var url = "/";
+            $(`#teacher_request`).load(url + ` #teacher_request`);
+            $(`#teacher_requests_button`).load(url + ` #teacher_requests_button`);
 
         })
 });
@@ -381,7 +487,9 @@ $(document).on('click', '#teacher_request_decline', function(event) {
             encode: true
         })
         .done(function(id) {
-            $("#divid").load(" #divid");
+            var url = "/";
+            $(`#teacher_request`).load(url + ` #teacher_request`);
+            $(`#teacher_requests_button`).load(url + ` #teacher_requests_button`);
 
         })
 });
@@ -400,7 +508,9 @@ $(document).on('click', '#student_request_accept', function(event) {
             encode: true
         })
         .done(function(id) {
-            $("#divid").load(" #divid");
+            var url = "/";
+            $(`#student_request`).load(url + ` #student_request`);
+            $(`#student_requests_button`).load(url + ` #student_requests_button`);
 
         })
 });
@@ -419,9 +529,90 @@ $(document).on('click', '#student_request_decline', function(event) {
             encode: true
         })
         .done(function(id) {
-            $("#divid").load(" #divid");
+            var url = "/";
+            $(`#student_request`).load(url + ` #student_request`);
+            $(`#student_requests_button`).load(url + ` #student_requests_button`);
 
         })
+});
+$(document).on('click', '#remove_teacher', function(event) {
+    event.preventDefault();
+    console.log($(this).val());
+
+    var ldata = {
+        'user_id': $(this).val(),
+
+    };
+    $.ajax({
+            type: 'POST',
+            url: '/remove_teacher',
+            data: ldata,
+            encode: true
+        })
+        .done(function(id) {
+            var url = "/";
+            $(`#school_teachers`).load(url + ` #school_teachers`);
+
+        })
+});
+$(document).on('click', '#assign_class_subject_submit_button', function(event) {
+    event.preventDefault();
+
+
+    var ldata = {
+        'teacher': $('#teacher').val(),
+        'standard': $('#standard').val(),
+        'subject': $('#subject').val(),
+    };
+    $.ajax({
+            type: 'POST',
+            url: '/assign_class_subject',
+            data: ldata,
+            encode: true
+        })
+        .done(function(id) {
+            var url = "/";
+            $(`#assign_class_subject`).load(url + ` #assign_class_subject`);
+            document.getElementById("assign_class_subject").style.display = "block";
+
+
+        })
+
+
+
+});
+$('#standard').on('change', function(event) {
+    event.preventDefault();
+    var ldata = {
+        "teacher_id": $('#teacher').val(),
+        'standard': $('#standard').val(),
+    };
+    $.ajax({
+            type: 'POST',
+            url: '/get_class_subject_list',
+            data: ldata,
+            encode: true
+        })
+        .done(function(data) {
+            var optionHTML = `<option disabled selected>Subject</option>
+                        <option value="English">English</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="Mathamatics">Mathamatics</option>
+                        <option value="Science">Science</option>`
+            if (data == 'None') {
+                $("#subject").empty();
+                $('#subject').append(optionHTML);
+
+            } else {
+                $("#subject").empty();
+                $('#subject').append(optionHTML);
+                $(`#subject option[value=${data}]`).remove();
+
+            }
+
+
+        })
+
 });
 </script>
 

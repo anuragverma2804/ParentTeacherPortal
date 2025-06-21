@@ -7,7 +7,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <meta charset="UTF-8">
-    <title>Parent ||</title>
+    <title>Student || {{request.user.StudentProfile.first_name}} {{request.user.StudentProfile.last_name}}</title>
 </head>
 
 <body>
@@ -39,6 +39,7 @@
                 </li>
             </ul>
             <hr>
+            <a href="/logout_user">Logout</a>
             <!--    <div class="dropdown">-->
             <!--      <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">-->
             <!--        <img src="" alt="" width="32" height="32" class="rounded-circle me-2">-->
@@ -59,7 +60,13 @@
                             <hr />
                         </div>
                         <div class="m-3">
-                            <a href="/edit_student/{{request.user.id}}"><i><small>Edit Profile</small></i></a>
+                            <h6>Standard: {{request.user.StudentProfile.standard}}</h6>
+                            <h6>Guardian: {{request.user.StudentProfile.guardian_name}}</h6>
+                            <h6>Contact: {{request.user.StudentProfile.phone}}</h6>
+                            <h6>School: {{request.user.StudentProfile.student_school.name}}</h6>
+                        </div>
+                        <div class="m-3">
+                            <a href="/edit_student/{{request.user.StudentProfile.student_id}}"><i><small>Edit Profile</small></i></a>
                         </div>
                     </div>
                 </div>
@@ -79,7 +86,7 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script>
 $(document).on('click', '#student_profile_button', function(event) {
-  console.log("d");
+    console.log("d");
     document.getElementById("student_profile").style.display = "block";
     document.getElementById("student_assignment").style.display = "none";
 
@@ -95,4 +102,5 @@ $(document).on('click', '#student_assignment_button', function(event) {
     document.getElementById("student_assignment_button").className = "nav-link active";
 });
 </script>
+
 </html>

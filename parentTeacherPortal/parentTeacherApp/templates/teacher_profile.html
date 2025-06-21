@@ -4,7 +4,7 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <meta charset="UTF-8">
-    <title>Teacher ||</title>
+    <title>Teacher || {{request.user.TeacherProfile.first_name}} {{request.user.TeacherProfile.last_name}}</title>
 </head>
 
 <body>
@@ -34,8 +34,19 @@
                         Assignments
                     </a>
                 </li>
+                {% if request.user.TeacherProfile.teacher_school == None %}
+                <li>
+                    <a id="teacher_join_school_button" href="#" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#grid"></use>
+                        </svg>
+                        Join School
+                    </a>
+                </li>
+                {% endif %}
             </ul>
             <hr>
+            <a href="/logout_user">Logout</a>
             <!--    <div class="dropdown">-->
             <!--      <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">-->
             <!--        <img src="" alt="" width="32" height="32" class="rounded-circle me-2">-->
@@ -49,14 +60,21 @@
                 <div class="col col-sm-5.5 p-2 card">
                     <div class="row">
                         <div class="col col-sm-2 mx-2">
-                            <img style="width: 70px; height:70px;" class="rounded-circle user_img" src="{{data.TeacherProfile.teacherImg.url}}">
+                            <img style="width: 70px; height:70px;" class="rounded-circle user_img" src="{{request.user.TeacherProfile.teacherImg.url}}">
                         </div>
                         <div class="col col-sm-9">
-                            <h4>{{data.TeacherProfile.name}}</h4>
+                            <h4>{{request.user.TeacherProfile.first_name}} {{request.user.TeacherProfile.last_name}}</h4>
                             <hr />
                         </div>
                         <div class="m-3">
-                            <a href="/edit_teacher/{{data.TeacherProfile.user.id}}"><i><small>Edit Profile</small></i></a>
+                            <h6>School:- {{request.user.TeacherProfile.teacher_school.name}}</h6>
+                            <div class="">
+                                <h6>Class Subject</h6>
+                                {% for key, value in request.user.TeacherProfile.class_subject_map.items %}
+                                <h6>{{ key }} {{ value }}</h6>
+                                {% endfor %}
+                            </div>
+                            <a href="/edit_teacher/{{request.user.TeacherProfile.teacher_id}}"><i><small>Edit Profile</small></i></a>
                         </div>
                     </div>
                 </div>
@@ -71,6 +89,23 @@
                 </div>
             </div>
         </div>
+        <div id="teacher_join_school" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
+            <h5>Join School</h5>
+            <div class="row mx-2">
+                <div id="teacher_school" class="col col-sm-5.5 p-2 card">
+                    <div class="">
+                        {% if request.school_request %}
+                        <div class="alert alert-success" role="alert">Request sent to {{request.school_request.name}}</div>
+                        {% else %}
+                        <label class="form-label">School</label>
+                        <select class="form-select  mb-4" id="teacher_school_select" aria-label="Default select example" name="teacher_school">
+                        </select>
+                        <button id="join_school_button" value="" class="btn btn-primary">Join</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -78,17 +113,77 @@
 $(document).on('click', '#teacher_profile_button', function(event) {
     document.getElementById("teacher_profile").style.display = "block";
     document.getElementById("teacher_assignment").style.display = "none";
+    document.getElementById("teacher_join_school").style.display = "none";
+
 
     document.getElementById("teacher_profile_button").className = "nav-link active";
     document.getElementById("teacher_assignment_button").className = "nav-link link-dark";
+    document.getElementById("teacher_join_school_button").className = "nav-link link-dark";
+
 
 });
 $(document).on('click', '#teacher_assignment_button', function(event) {
     document.getElementById("teacher_profile").style.display = "none";
     document.getElementById("teacher_assignment").style.display = "block";
+    document.getElementById("teacher_join_school").style.display = "none";
+
 
     document.getElementById("teacher_profile_button").className = "nav-link link-dark";
     document.getElementById("teacher_assignment_button").className = "nav-link active";
+    document.getElementById("teacher_join_school_button").className = "nav-link link-dark";
+
+});
+$(document).on('click', '#teacher_join_school_button', function(event) {
+    document.getElementById("teacher_profile").style.display = "none";
+    document.getElementById("teacher_assignment").style.display = "none";
+    document.getElementById("teacher_join_school").style.display = "block";
+
+
+    document.getElementById("teacher_profile_button").className = "nav-link link-dark";
+    document.getElementById("teacher_assignment_button").className = "nav-link link-dark";
+    document.getElementById("teacher_join_school_button").className = "nav-link active";
+
+});
+$(document).ready(function(event) {
+    $.ajax({
+            type: 'POST',
+            url: '/school_list',
+            encode: true
+        })
+        .done(function(data) {
+            school_list = JSON.parse(data)
+            for (i = 0; i < school_list.length; i++) {
+                let optionHTML = `
+            }
+            <option value="${school_list[i]['id']}"> 
+                ${school_list[i]['name']} 
+            </option>`;
+                $('#teacher_school_select').append(optionHTML);
+                $('#student_school_select').append(optionHTML);
+            }
+        });
+
+});
+$(document).on('click', '#join_school_button', function(event) {
+    event.preventDefault();
+
+    var ldata = {
+        'school_id': $('#teacher_school_select').find(":selected").val(),
+
+    };
+    $.ajax({
+            type: 'POST',
+            url: '/send_request',
+            data: ldata,
+            encode: true
+        })
+        .done(function(data) {
+            $("#teacher_school").html(`<div class="alert alert-success" role="alert">Request Sent to ${data}</div>`);
+
+        });
+
+
+
 });
 </script>
 
