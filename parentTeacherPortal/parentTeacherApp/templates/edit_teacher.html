@@ -19,17 +19,19 @@
         <h6>Check Class/Subject you want to remove</h6>
         <div id=class_subject_checkbox>
             {% for key, value in request.edit_user.TeacherProfile.class_subject_map.items %}
+            {% for j in value %}
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="{{ key }}:{{ value }}">
+                <input class="form-check-input" type="checkbox" value="{{ key }}:{{ j }}">
                 <label class="form-check-label" for="checkDefault">
                     <div class="row">
                         <div class="col col-sm-2"></div>
                         <h6 class="col col-sm-2">{{ key }}</h6>
                         <div class="col col-sm-2"></div>
-                        <h6 class="col col-sm-2">{{ value }}</h6>
+                        <h6 class="col col-sm-2">{{ j }}</h6>
                     </div>
                 </label>
             </div>
+            {% endfor %}
             {% endfor %}
         </div>
         <button id="class_subject_button" class="btn btn-primary" type="button">Submit</button>
@@ -43,20 +45,16 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script>
 $(document).on('click', '#class_subject_button', function(event) {
-    var map = new Object();
+    var subjects = [];
     $("#class_subject_checkbox :input").each(function() {
         if ($(this).is(":checked") == true) {
-            var key=$(this).val().split(":")[0];
-            var value=$(this).val().split(":")[1];
-            map[key]=value;
+            subjects.push($(this).val());
         }
     });
     var ldata = {
-        'map': JSON.stringify(map),
-        // 'csrfmiddlewaretoken': $(this).find('input[name=csrfmiddlewaretoken]').val()
+        'map': JSON.stringify(subjects),
 
     };
-    console.log(map);
     $.ajax({
             type: 'POST',
             url: `/edit_teacher/{{request.edit_user.id}}`,

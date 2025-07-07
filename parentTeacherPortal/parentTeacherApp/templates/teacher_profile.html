@@ -44,6 +44,14 @@
                     </a>
                 </li>
                 {% endif %}
+                <li>
+                    <a id="assign_workbook_button" href="#" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#grid"></use>
+                        </svg>
+                        Assign Workbook
+                    </a>
+                </li>
             </ul>
             <hr>
             <a href="/logout_user">Logout</a>
@@ -70,8 +78,10 @@
                             <h6>School:- {{request.user.TeacherProfile.teacher_school.name}}</h6>
                             <div class="">
                                 <h6>Class Subject</h6>
-                                {% for key, value in request.user.TeacherProfile.class_subject_map.items %}
-                                <h6>{{ key }} {{ value }}</h6>
+                                {% for standard, subject_list in request.user.TeacherProfile.class_subject_map.items %}
+                                {% for subject in subject_list %}
+                                <h6>{{ standard }} {{ subject }}</h6>
+                                {% endfor %}
                                 {% endfor %}
                             </div>
                             <a href="/edit_teacher/{{request.user.TeacherProfile.teacher_id}}"><i><small>Edit Profile</small></i></a>
@@ -83,10 +93,13 @@
         <div id="teacher_assignment" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
             <h5>Assignment</h5>
             <div class="row mx-2">
-                <div class="col col-sm-5.5 p-2 card">
-                    <div class="row">
+                {% for i in request.user.TeacherProfile.teacher_workbooks.all %}
+                <div class="col col-sm-5 p-2 m-2">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">{{i.worksheet_name}} | {{i.standard}} | {{i.subject}} | {{i.chapter}}</span>
                     </div>
                 </div>
+                {% endfor %}
             </div>
         </div>
         <div id="teacher_join_school" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
@@ -106,6 +119,42 @@
                 </div>
             </div>
         </div>
+        <div id="teacher_assign_workbook" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
+            <h5>Assign Workbook</h5>
+            <div class="row">
+                <div class="col col-sm-3 p-2">
+                    <select id="standard" class="form-select" aria-label="Default select example">
+                        <option disabled selected>Class</option>
+                        {% for standard, subject in request.user.TeacherProfile.class_subject_map.items %}
+                        <option value="{{standard}}">{{standard}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col col-sm-3 p-2">
+                    <select id="subject" class="form-select" aria-label="Default select example">
+                        <option selected disabled>Subjects</option>
+                    </select>
+                </div>
+                <div class="col col-sm-3 p-2">
+                    <select id="worksheet" class="form-select" aria-label="Default select example">
+                        <option selected disabled>Worksheets</option>
+                    </select>
+                </div>
+                <div class="col col-sm-3 p-2">
+                    <label for="duedate">Due Date:</label>
+                    <input type="datetime-local" id="duedate" name="duedate">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col col-sm-5">
+                </div>
+                <div class="col col-sm-2">
+                    <button id="allot_worksheet" class="btn btn-primary">Allot</button>
+                </div>
+                <div class="col col-sm-5">
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -114,11 +163,15 @@ $(document).on('click', '#teacher_profile_button', function(event) {
     document.getElementById("teacher_profile").style.display = "block";
     document.getElementById("teacher_assignment").style.display = "none";
     document.getElementById("teacher_join_school").style.display = "none";
+    document.getElementById("teacher_assign_workbook").style.display = "none";
+
 
 
     document.getElementById("teacher_profile_button").className = "nav-link active";
     document.getElementById("teacher_assignment_button").className = "nav-link link-dark";
     document.getElementById("teacher_join_school_button").className = "nav-link link-dark";
+    document.getElementById("assign_workbook_button").className = "nav-link link-dark";
+
 
 
 });
@@ -126,22 +179,45 @@ $(document).on('click', '#teacher_assignment_button', function(event) {
     document.getElementById("teacher_profile").style.display = "none";
     document.getElementById("teacher_assignment").style.display = "block";
     document.getElementById("teacher_join_school").style.display = "none";
+    document.getElementById("teacher_assign_workbook").style.display = "none";
+
 
 
     document.getElementById("teacher_profile_button").className = "nav-link link-dark";
     document.getElementById("teacher_assignment_button").className = "nav-link active";
     document.getElementById("teacher_join_school_button").className = "nav-link link-dark";
+    document.getElementById("assign_workbook_button").className = "nav-link link-dark";
+
 
 });
 $(document).on('click', '#teacher_join_school_button', function(event) {
     document.getElementById("teacher_profile").style.display = "none";
     document.getElementById("teacher_assignment").style.display = "none";
     document.getElementById("teacher_join_school").style.display = "block";
+    document.getElementById("teacher_assign_workbook").style.display = "none";
+
 
 
     document.getElementById("teacher_profile_button").className = "nav-link link-dark";
     document.getElementById("teacher_assignment_button").className = "nav-link link-dark";
     document.getElementById("teacher_join_school_button").className = "nav-link active";
+    document.getElementById("assign_workbook_button").className = "nav-link link-dark";
+
+
+});
+$(document).on('click', '#assign_workbook_button', function(event) {
+    document.getElementById("teacher_profile").style.display = "none";
+    document.getElementById("teacher_assignment").style.display = "none";
+    document.getElementById("teacher_join_school").style.display = "none";
+    document.getElementById("teacher_assign_workbook").style.display = "block";
+
+
+
+    document.getElementById("teacher_profile_button").className = "nav-link link-dark";
+    document.getElementById("teacher_assignment_button").className = "nav-link link-dark";
+    document.getElementById("teacher_join_school_button").className = "nav-link link-dark";
+    document.getElementById("assign_workbook_button").className = "nav-link active";
+
 
 });
 $(document).ready(function(event) {
@@ -181,9 +257,65 @@ $(document).on('click', '#join_school_button', function(event) {
             $("#teacher_school").html(`<div class="alert alert-success" role="alert">Request Sent to ${data}</div>`);
 
         });
+});
+$('#standard').on('change', function(event) {
+    var user_standard = $('#standard').val();
+    $("#subject").empty();
+    $("#subject").append(`<option selected disabled>Subjects</option>`);
+    var subject_list = {{ request.user.TeacherProfile.class_subject_map | safe }} [user_standard];
+    for (subject in school_list) {
+        if (subject_list[subject] != undefined) {
+            optionHTML = `<option value="${subject_list[subject]}" >${subject_list[subject]}</option>`
+            $("#subject").append(optionHTML);
+        }
+    }
+});
+$('#subject').on('change', function(event) {
+    event.preventDefault();
+    var ldata = {
+        'subject': $('#subject').find(":selected").val()
+    }
 
 
+    $.ajax({
+            type: 'POST',
+            url: '/get_worksheet',
+            data: ldata,
+            encode: true
+        })
+        .done(function(data) {
+            data = JSON.parse(data);
+            console.log(data);
+            $("#worksheet").empty();
+            $("#worksheet").append(`<option selected disabled>Worksheets</option>`);
+            for (i in data) {
+                optionHTML = `<option value="${data[i]["worksheet_id"]}">${data[i]["worksheet_name"]} | ${data[i]["standard"]} | ${data[i]["subject"]} | ${data[i]["chapter"]}</option>`
+                $("#worksheet").append(optionHTML);
+            }
 
+        });
+
+});
+$(document).on('click', '#allot_worksheet', function(event) {
+    event.preventDefault();
+
+    var ldata = {
+        'standard': $('#standard').find(":selected").val(),
+        'subject': $('#subject').find(":selected").val(),
+        'worksheet_id': $('#worksheet').find(":selected").val(),
+        'duedate': $('#duedate').val()
+
+
+    };
+    $.ajax({
+            type: 'POST',
+            url: '/assign_worksheet',
+            data: ldata,
+            encode: true
+        })
+        .done(function(data) {
+
+        });
 });
 </script>
 

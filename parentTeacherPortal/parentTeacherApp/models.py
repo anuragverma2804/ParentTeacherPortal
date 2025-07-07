@@ -1,7 +1,28 @@
 from django.db import models
 from jsonfield import JSONField
 from django.contrib.auth.models import User
-from django.core.validators import validate_comma_separated_integer_list
+
+
+class Worksheet(models.Model):
+    worksheet_id = models.AutoField(primary_key=True)
+    worksheet_name = models.CharField(max_length=50, blank=True)
+    standard = models.CharField(max_length=5, blank=False)
+    subject = models.CharField(max_length=50, blank=True)
+    chapter = models.CharField(max_length=50, blank=True)
+    uploaded_document = models.FileField(upload_to='Uploaded Document', null=False)
+    objects = models.Manager()
+
+
+class Assignment(models.Model):
+    assignment_id = models.AutoField(primary_key=True)
+    standard = models.CharField(max_length=5, blank=False)
+    subject = models.CharField(max_length=50, blank=True)
+    worksheet = models.ManyToManyField(Worksheet, related_name="Worksheet")
+    assigned_student = models.ManyToManyField(User, related_name="assigned_student")
+    submit_status = models.ManyToManyField(User, related_name="submit_status")
+    due_date = models.DateTimeField()
+
+    objects = models.Manager()
 
 
 class SchoolProfile(models.Model):
@@ -18,7 +39,7 @@ class SchoolProfile(models.Model):
     city = models.CharField(max_length=50, blank=False, default=None)
     state = models.CharField(max_length=50, blank=False, default=None)
     pincode = models.CharField(max_length=10, blank=False, default=None)
-    school_workbook_list = models.TextField(validators=[validate_comma_separated_integer_list], null=True)
+    school_workbooks = models.ManyToManyField(Worksheet, related_name='school_workbooks', default=None, blank=True)
 
     objects = models.Manager()
 
@@ -33,7 +54,8 @@ class StudentProfile(models.Model):
     studentImg = models.ImageField(upload_to='Student/Student Image', default='Images/default_page.png', null=False)
     guardian_name = models.CharField(max_length=50, blank=False)
     phone = models.CharField(max_length=20, blank=False)
-    student_assignment_list = JSONField(default=dict)
+    student_assignment_list = models.ManyToManyField(Assignment, related_name='student_assignment_list', default=None,
+                                                     blank=True)
     student_school = models.ForeignKey(SchoolProfile, related_name='Student_School', null=True, default=None,
                                        blank=True,
                                        on_delete=models.CASCADE)
@@ -51,7 +73,7 @@ class TeacherProfile(models.Model):
     phone = models.CharField(max_length=20, blank=False)
     class_subject_map = JSONField(default=dict)
     assigment_map = JSONField(default=dict)
-    teacher_workbook_list = models.TextField(validators=[validate_comma_separated_integer_list], null=True)
+    teacher_workbooks = models.ManyToManyField(Worksheet, related_name='teacher_workbooks', default=None, blank=True)
     teacher_school = models.ForeignKey(SchoolProfile, related_name='Teacher_School', null=True, default=None,
                                        blank=True, on_delete=models.CASCADE)
 

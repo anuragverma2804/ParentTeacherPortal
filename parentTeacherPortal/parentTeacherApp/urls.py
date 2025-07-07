@@ -17,5 +17,11 @@ urlpatterns = [
     path('assign_workbook', views.assign_workbook, name='assign_workbook'),
     path('assign_class_subject', views.assign_class_subject, name='assign_class_subject'),
     path('get_class_subject_list', views.get_class_subject_list, name='get_class_subject_list'),
+    path('get_teacher_standard', views.get_teacher_standard, name='get_teacher_standard'),
+    path('get_worksheet', views.get_worksheet, name='get_worksheet'),
+    path('assign_worksheet', views.assign_worksheet, name='assign_worksheet'),
     path('school_list', views.school_list, name='school_list'),
+    path('load', views.display_words, name='load'),
+    path('add_workbook', views.add_workbook, name='add_workbook'),
+    path('mark_as_done', views.mark_as_done, name='mark_as_done'),
 ]

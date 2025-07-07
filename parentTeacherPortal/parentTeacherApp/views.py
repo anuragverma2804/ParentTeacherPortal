@@ -1,15 +1,21 @@
+from datetime import datetime
+import os
+from django.conf import settings
 from django.contrib import messages, auth
 from django.contrib.auth import authenticate, login
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.serializers import json
 import json
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.auth import authenticate, login, logout
+from django.template.defaultfilters import lower
+from django.templatetags.static import static
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import TeacherProfile, StudentProfile, SchoolProfile
+from .models import TeacherProfile, StudentProfile, SchoolProfile, Worksheet, Assignment
 
 
 def home(request):
@@ -23,9 +29,11 @@ def home(request):
                     request.school_request = i
         return render(request, 'teacher_profile.html')
     elif request.user.username.split("_", 1)[1] == 'school':
+        request.worksheet = Worksheet.objects.all()
         return render(request, 'school_profile.html')
     elif request.user.username.split("_", 1)[1] == 'student':
-        return render(request, 'parent_profile.html')
+        assignments = Assignment.objects.filter
+        return render(request, 'student_profile.html')
     else:
         return redirect('login')
 
@@ -171,6 +179,8 @@ def accept_requests(request):
         elif user.username.split("_", 1)[1] == 'student':
             schoolprofile.student_requests.remove(user)
             schoolprofile.students.add(user)
+            user.StudentProfile.student_school = schoolprofile
+            user.StudentProfile.save()
     return HttpResponse(request.POST.get('user_id'))
 
 
@@ -221,13 +231,21 @@ def reset_password(request, id):
 def edit_school(request, id):
     return render(request, 'edit_school.html')
 
+
 @csrf_exempt
 def edit_teacher(request, id):
     edit_user = User.objects.get(id=id)
     request.edit_user = edit_user
-    print(json.loads(request.POST.get("map")))
-    # for i,j in (json.loads(request.POST.get("map"))).items():
-    #     print(i,j)
+    if (request.POST.get("map") != None):
+        class_subject_map = json.loads(request.POST.get("map"))
+        for pair in class_subject_map:
+            standard = pair.split(':')[0]
+            edit_user.TeacherProfile.class_subject_map[standard].remove(pair.split(':')[1])
+            if len(edit_user.TeacherProfile.class_subject_map[standard]) == 0:
+                edit_user.TeacherProfile.class_subject_map.pop(standard)
+            edit_user.TeacherProfile.save()
+    # else:
+
     return render(request, 'edit_teacher.html')
 
 
@@ -259,9 +277,14 @@ def assign_class_subject(request):
         return redirect('login')
     if request.method == 'POST':
         teacher_profile = TeacherProfile.objects.get(teacher_id=request.POST.get("teacher"))
-        map = {request.POST.get("standard"): request.POST.get("subject")}
-        teacher_profile.class_subject_map.update(map)
-        teacher_profile.save()
+        standard = request.POST.get("standard")
+        if standard in teacher_profile.class_subject_map:
+            (teacher_profile.class_subject_map[standard]).append(request.POST.get("subject"))
+            teacher_profile.save()
+        else:
+            map = {request.POST.get("standard"): [request.POST.get("subject")]}
+            teacher_profile.class_subject_map.update(map)
+            teacher_profile.save()
     return HttpResponse("response")
 
 
@@ -277,3 +300,105 @@ def get_class_subject_list(request):
             if key == standard:
                 subject.append(value)
         return HttpResponse(subject if len(subject) > 0 else None)
+
+
+def display_words(request):
+    json_file_path = os.path.join(settings.BASE_DIR, 'parentTeacherApp', 'static', 'data.json')
+    with open(json_file_path, 'r') as f:
+        data = json.load(f)
+        standard = str(data.get("standard", ""))
+        subjects = data.get("subjects", {})
+        for subject, books in subjects.items():
+            for book_name, book_data in books.items():
+                for chapter_name, chapter_data in book_data.items():
+                    for worksheet in chapter_data:
+                        worksheetObject = Worksheet.objects.create(standard=standard, subject=subject,
+                                                                   chapter=chapter_name, worksheet_name=worksheet)
+                        print(worksheet)
+                        worksheetObject.save()
+    return HttpResponse("Done")
+
+
+@csrf_exempt
+def add_workbook(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method == 'POST':
+        schoolprofile = request.user.SchoolProfile
+        worksheet = Worksheet.objects.get(worksheet_id=request.POST.get('workbook_id'))
+        schoolprofile.school_workbooks.add(worksheet)
+        schoolprofile.save()
+    return HttpResponse("Done")
+
+
+@csrf_exempt
+def get_teacher_standard(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method == 'POST':
+        return HttpResponse(
+            json.dumps((TeacherProfile.objects.get(teacher_id=request.POST.get("user_id"))).class_subject_map))
+
+
+@csrf_exempt
+def get_worksheet(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method == 'POST':
+        worksheets = []
+        if request.user.username.split("_", 1)[1] == 'school':
+            teacherprofile = TeacherProfile.objects.get(teacher_id=request.POST.get("user_id"))
+            for subject in teacherprofile.class_subject_map[request.POST.get("standard")]:
+                for worksheet in request.user.SchoolProfile.school_workbooks.all():
+                    if worksheet not in teacherprofile.teacher_workbooks.all():
+                        if worksheet.standard == request.POST.get("standard"):
+                            if worksheet.subject == lower(subject):
+                                worksheets.append(
+                                    {"worksheet_name": worksheet.worksheet_name, "standard": worksheet.standard,
+                                     "subject": worksheet.subject,
+                                     "chapter": worksheet.chapter, "worksheet_id": worksheet.worksheet_id})
+        if request.user.username.split("_", 1)[1] == 'teacher':
+            for worksheet in request.user.TeacherProfile.teacher_workbooks.all():
+                print(lower(request.POST.get("subject")))
+                if worksheet.subject == lower(request.POST.get("subject")):
+                    worksheets.append(
+                        {"worksheet_name": worksheet.worksheet_name, "standard": worksheet.standard,
+                         "subject": worksheet.subject,
+                         "chapter": worksheet.chapter, "worksheet_id": worksheet.worksheet_id})
+        worksheets = json.dumps(worksheets)
+        return HttpResponse(worksheets)
+
+
+@csrf_exempt
+def assign_worksheet(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method == 'POST':
+        if request.user.username.split("_", 1)[1] == 'school':
+            teacherprofile = TeacherProfile.objects.get(teacher_id=request.POST.get("teacher_id"))
+            teacherprofile.teacher_workbooks.add(Worksheet.objects.get(worksheet_id=request.POST.get("worksheet_id")))
+            teacherprofile.save()
+        if request.user.username.split("_", 1)[1] == 'teacher':
+            worksheet = Worksheet.objects.get(worksheet_id=request.POST.get("worksheet_id"))
+            assignment = Assignment.objects.create(standard=worksheet.standard, subject=worksheet.subject,
+                                                   due_date=request.POST.get('duedate'))
+            assignment.worksheet.add(worksheet)
+            assignment.save()
+            students = StudentProfile.objects.filter(standard=worksheet.standard)
+            for student in students:
+                assignment.assigned_student.add(student.user)
+                student.student_assignment_list.add(assignment)
+                student.save()
+                assignment.save()
+    return HttpResponse("done")
+
+
+@csrf_exempt
+def mark_as_done(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method == 'POST':
+        assignment = Assignment.objects.get(assignment_id=request.POST.get("assignment_id"))
+        assignment.submit_status.add(request.user)
+        assignment.save()
+    return HttpResponse("done")

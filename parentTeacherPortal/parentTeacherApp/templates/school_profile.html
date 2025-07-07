@@ -29,7 +29,7 @@
                         Profile
                     </a>
                 </li>
-<!--                 <li>
+                <!--                 <li>
                     <a id="teacher_requests_button" href="#" class="nav-link link-dark">
                         <svg class="bi me-2" width="16" height="16">
                             <use xlink:href="#speedometer2"></use>
@@ -61,7 +61,7 @@
                         <svg class="bi me-2" width="16" height="16">
                             <use xlink:href="#speedometer2"></use>
                         </svg>
-                        Add Workbooks
+                        List of Workbooks
                     </a>
                 </li>
                 <li>
@@ -124,7 +124,6 @@
                             <div class="col col-sm-2 mx-2">
                                 <img style="width: 70px; height:70px;" class="rounded-circle user_img" src="{{i.StudentProfile.studentImg.url}}">
                             </div>
-                            {{i.username}}
                             <p class="card-text">{{i.StudentProfile.first_name}} {{i.StudentProfile.last_name}}</p>
                             <div class="row">
                                 <div class="col-sm-4">
@@ -154,43 +153,41 @@
                 Requests ({{ request.user.SchoolProfile.teacher_requests.count }})
             </button>
             <div class="collapse" id="collapseExample">
-                    <div id="teacher_request" class="col  card my-2 py-3 px-3 my-3 mx-3">
-                        <h5>Teacher Requests</h5>
-                        <div class="row mx-2">
-                            <div class="col col-sm-5.5 p-2 ">
-                                <div class="card text-center">
-                                    <div class="card-body">
-                                        {% if request.user.SchoolProfile.teacher_requests.count > 0 %}
-                                        {% for i in request.user.SchoolProfile.teacher_requests.all %}
-                                        <div class="col col-sm-2 mx-2">
-                                            <img style="width: 70px; height:70px;" class="rounded-circle user_img" src="{{i.TeacherProfile.teacherImg.url}}">
-                                        </div>
-                                        <p class="card-text">{{i.TeacherProfile.first_name}} {{i.TeacherProfile.last_name}}</p>
-                                        <div class="row">
-                                            <div class="col-sm-4">
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <button id="teacher_request_accept" value="{{i.id}}" class="btn btn-primary">Accept</button>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <button id="teacher_request_decline" value="{{i.id}}" class="btn btn-primary">Decline</button>
-                                            </div>
-                                            <div class="col-sm-4">
-                                            </div>
-                                        </div>
-                                        {% endfor %}
-                                        {% else %}
-                                        <h5 class="card-title">No Request</h5>
-                                        {% endif %}
+                <div id="teacher_request" class="col  card my-2 py-3 px-3 my-3 mx-3">
+                    <h5>Teacher Requests</h5>
+                    <div class="row mx-2">
+                        <div class="col col-sm-5.5 p-2 ">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    {% if request.user.SchoolProfile.teacher_requests.count > 0 %}
+                                    {% for i in request.user.SchoolProfile.teacher_requests.all %}
+                                    <div class="col col-sm-2 mx-2">
+                                        <img style="width: 70px; height:70px;" class="rounded-circle user_img" src="{{i.TeacherProfile.teacherImg.url}}">
                                     </div>
+                                    <p class="card-text">{{i.TeacherProfile.first_name}} {{i.TeacherProfile.last_name}}</p>
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button id="teacher_request_accept" value="{{i.id}}" class="btn btn-primary">Accept</button>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button id="teacher_request_decline" value="{{i.id}}" class="btn btn-primary">Decline</button>
+                                        </div>
+                                        <div class="col-sm-4">
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    {% else %}
+                                    <h5 class="card-title">No Request</h5>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
             </div>
-                        {% endif %}
-
-
+            {% endif %}
             <div class="row mx-2">
                 <div class="col col-sm-5.5 p-2 card">
                     <div class="card text-center">
@@ -203,7 +200,6 @@
                                         <img style="width: 60px; height:60px;" class="rounded-circle user_img" src="{{SchoolProfile.schoolImg.url}}">
                                     </div>
                                     <div class="col col-sm-8">
-                                        {{i.is_active}}
                                         <h5>{{i.TeacherProfile.first_name}} {{i.TeacherProfile.last_name}}</h5>
                                         <hr />
                                         {% for key, value in i.TeacherProfile.class_subject_map.items %}
@@ -211,7 +207,9 @@
                                             <div class="col"></div>
                                             <div class="col"></div>
                                             <div class="col-sm-4">{{ key }}</div>
-                                            <div class="col-sm-4">{{ value }}</div>
+                                            {% for j in value %}
+                                            <div class="col-sm-4">{{ j }}</div>
+                                            {% endfor %}
                                         </div>
                                         {% endfor %}
                                     </div>
@@ -235,39 +233,46 @@
         <div id="add_workbooks" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
             <h5>Add Workbooks</h5>
             <div class="row mx-2">
-                <div class="col col-sm-5.5 p-2 card">
+                {% for i in request.worksheet.all %}
+                <div class="col col-sm-5 p-2 m-2">
                     <div class="input-group mb-3">
-                        <div class="input-group-text">
-                            <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input">
-                        </div>
-                        <span class="input-group-text">Workbook 1</span>
+                        <span class="input-group-text">{{i.worksheet_name}} | {{i.standard}} | {{i.subject}} | {{i.chapter}}</span>
                     </div>
                 </div>
+                {% if i in request.user.SchoolProfile.school_workbooks.all %}
+                <div class="col col-sm-4 m-2"><button value="{{i.worksheet_id}}" id="remove_workbook" class="btn btn-danger">Remove</button></div>
+                {% else %}
+                <div class="col col-sm-4 m-2"><button value="{{i.worksheet_id}}" id="add_workbook" class="btn btn-primary">Add</button></div>
+                {% endif %}
+                {% endfor %}
             </div>
-            <button style="width: -webkit-fill-available;" type="button" class="btn btn-primary mx-2 my-2">Add</button>
         </div>
         <div id="assign_workbook" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
-            <h5 style="text-align:center;">Assign Workbook</h5>
+            <h5 style="text-align:center;">List of Workbook</h5>
             <div class="row mx-2">
-                <div class="col-sm-2 "></div>
                 <div class="col col-sm-4 p-2">
-                    <select class="form-select" aria-label="Default select example">
+                    <select id="assign_workbook_teacher" class="form-select" aria-label="Default select example">
+                        <option selected disabled>Teachers</option>
                         {% if request.user.SchoolProfile.teachers.count > 0 %}
                         {% for i in request.user.SchoolProfile.teachers.all %}
-                        <option value="{{i.teachers.teacher_id}}">{{i.TeacherProfile.first_name}} {{i.TeacherProfile.last_name}}</option>
+                        <option value="{{i.TeacherProfile.teacher_id}}">{{i.TeacherProfile.first_name}} {{i.TeacherProfile.last_name}}</option>
                         {% endfor %}
                         {% endif %}
                     </select>
                 </div>
                 <div class="col col-sm-4 p-2">
-                    <select class="form-select" aria-label="Default select example">
-                        <option selected>Workbook</option>
-                        <option value="1">Workbook 1</option>
+                    <select id="assign_workbook_standard" class="form-select" aria-label="Default select example">
+                        <option selected disabled>Standard</option>
+                    </select>
+                </div>
+                <div class="col col-sm-4 p-2">
+                    <select id="assign_workbook_workbook" class="form-select" aria-label="Default select example">
+                        <option selected disabled>Workbooks</option>
                     </select>
                 </div>
                 <div class="col-sm-2 "></div>
             </div>
-            <button style="position:absolute;right:46%" type="button" class="btn btn-primary mx-2 my-2">Assign</button>
+            <button id="assign_workbook_submit_button" style="position:absolute;right:46%" type="button" class="btn btn-primary mx-2 my-2">Assign</button>
         </div>
         <div id="assign_class_subject" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
             <h5 style="text-align:center;">Assign Class/Subject</h5>
@@ -306,6 +311,7 @@
             </div>
             <button id="assign_class_subject_submit_button" style="position:absolute;right:46%" type="button" class="btn btn-primary mx-2 my-2">Assign</button>
         </div>
+        <a href="/load">load</a>
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -606,12 +612,107 @@ $('#standard').on('change', function(event) {
             } else {
                 $("#subject").empty();
                 $('#subject').append(optionHTML);
-                $(`#subject option[value=${data}]`).remove();
+                data = data.replace(/'/g, '"')
+                data = JSON.parse(data)
+                for (subject in data) {
+                    $(`#subject option[value=${data[subject]}]`).remove();
+                }
 
             }
 
 
         })
+
+});
+$(document).on('click', '#add_workbook', function(event) {
+
+    console.log($(this).val());
+    var ldata = {
+        "workbook_id": $(this).val()
+    };
+    $.ajax({
+            type: 'POST',
+            url: '/add_workbook',
+            data: ldata,
+            encode: true
+        })
+        .done(function(data) {
+            // var url = "/";
+            // $(`#add_workbooks`).load(url + ` #add_workbooks`);
+        });
+
+});
+
+$('#assign_workbook_teacher').on('change', function(event) {
+    event.preventDefault();
+    var ldata = {
+        'user_id': $('#assign_workbook_teacher').val()
+    };
+    $.ajax({
+            type: 'POST',
+            url: '/get_teacher_standard',
+            data: ldata,
+            encode: true
+
+        })
+        .done(function(data) {
+            $("#assign_workbook_standard").empty();
+            $("#assign_workbook_standard").append(`<option selected disabled>Standard</option>`);
+
+            for (standard in Object.keys(JSON.parse(data))) {
+                var optionHTML = `<option value="${Object.keys(JSON.parse(data))[standard]}">${Object.keys(JSON.parse(data))[standard]}</option>`
+                $("#assign_workbook_standard").append(optionHTML);
+
+            }
+        });
+});
+$('#assign_workbook_standard').on('change', function(event) {
+    event.preventDefault();
+    var ldata = {
+        'user_id': $('#assign_workbook_teacher').val(),
+        'standard': $('#assign_workbook_standard').val()
+    };
+    $.ajax({
+            type: 'POST',
+            url: '/get_worksheet',
+            data: ldata,
+            encode: true
+
+        })
+        .done(function(data) {
+            data = JSON.parse(data);
+            console.log(data);
+            $("#assign_workbook_workbook").empty();
+            $("#assign_workbook_workbook").append(`<option selected disabled>Workbooks</option>`);
+            for (i in data) {
+                optionHTML = `<option value="${data[i]["worksheet_id"]}">${data[i]["worksheet_name"]} | ${data[i]["standard"]} | ${data[i]["subject"]} | ${data[i]["chapter"]}</option>`
+                $("#assign_workbook_workbook").append(optionHTML);
+            }
+
+
+        });
+});
+
+$(document).on('click', '#assign_workbook_submit_button', function(event) {
+    event.preventDefault();
+
+    var ldata = {
+        'teacher_id': $('#assign_workbook_teacher').val(),
+        'standard': $('#assign_workbook_standard').val(),
+        'worksheet_id': $('#assign_workbook_workbook').val()
+
+    };
+    $.ajax({
+            type: 'POST',
+            url: '/assign_worksheet',
+            data: ldata,
+            encode: true
+
+        })
+        .done(function(data) {
+            var url = "/";
+            $(`#assign_workbook`).load(url + ` #assign_workbook`);
+        });
 
 });
 </script>
