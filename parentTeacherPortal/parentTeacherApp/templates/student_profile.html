@@ -80,10 +80,10 @@
                     <h7>{{assignment}}</h7>
                 </div>
                 <div class="col col-sm-2">
-                    {% if request.user in assignment.assigned_student %}
-                    <button id="mark_as_done_btn" value="{{assignment.assignment_id}}" class="btn btn-primary">Mark as done</button>
-                    {% else %}
+                    {% if request.user in assignment.submit_status.all %}
                     <button id="done" value="{{assignment.assignment_id}}" class="btn btn-success">Done</button>
+                    {% else %}
+                    <button id="mark_as_done_btn" value="{{assignment.assignment_id}}" class="btn btn-primary">Mark as done</button>
                     {% endif %}
                 </div>
             </div>
