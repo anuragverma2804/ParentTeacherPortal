@@ -2,6 +2,142 @@
 <html lang="en">
 
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            background: url('https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat fixed;
+            min-height: 100vh;
+            font-family: 'Nunito', 'Segoe UI', 'Comic Sans MS', cursive, sans-serif;
+        }
+        .sidebar {
+            background: rgba(255,255,255,0.95)!important;
+            border-radius: 2rem 0 0 2rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            min-width: 220px;
+            max-width: 100vw;
+            transition: left 0.3s, box-shadow 0.3s;
+        }
+        .sidebar .nav-link.active {
+            background: linear-gradient(90deg, #f7971e 0%, #ffd200 100%);
+            color: #fff !important;
+            font-weight: bold;
+            border-radius: 1.5rem;
+            box-shadow: 0 2px 8px #ffd20055;
+        }
+        .sidebar .nav-link {
+            color: #2d3a4b;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            transition: background 0.2s, color 0.2s;
+        }
+        .sidebar .nav-link:hover {
+            background: #fff3cd;
+            color: #f7971e !important;
+        }
+        @media (max-width: 991.98px) {
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                top: 0;
+                height: 100vh;
+                z-index: 1050;
+                width: 220px !important;
+                border-radius: 0 2rem 2rem 0;
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.28);
+                transition: left 0.3s, box-shadow 0.3s;
+            }
+            .sidebar.sidebar-open {
+                left: 0;
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.28);
+            }
+            .sidebar .mt-5 {
+                margin-top: 2rem !important;
+            }
+            .sidebar .nav-link {
+                font-size: 1.05rem;
+                padding: 0.7rem 1rem;
+            }
+            .sidebar .fs-4, .sidebar h4 {
+                font-size: 1.2rem !important;
+            }
+        }
+        @media (max-width: 991.98px) {
+            .sidebar-toggle-btn {
+                display: block !important;
+            }
+        }
+        @media (min-width: 992px) {
+            .sidebar-toggle-btn {
+                display: none !important;
+            }
+        }
+        .card, .card-body {
+            background: rgba(255,255,255,0.92) !important;
+            border-radius: 1.5rem !important;
+            box-shadow: 0 4px 24px 0 rgba(31, 38, 135, 0.10) !important;
+        }
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #2d3a4b;
+            text-shadow: 1px 2px 8px #b2d8f7;
+            margin-bottom: 1.5rem;
+        }
+        .fun-badge {
+            background: linear-gradient(90deg, #f7971e 0%, #ffd200 100%);
+            color: #fff;
+            font-weight: bold;
+            border-radius: 1rem;
+            font-size: 1rem;
+            box-shadow: 0 2px 8px #ffd20055;
+        }
+        .workbook-card {
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            border: none;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            border-radius: 2rem;
+            transition: transform 0.25s, box-shadow 0.25s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .workbook-card:hover {
+            transform: scale(1.06) rotate(-2deg);
+            box-shadow: 0 16px 48px 0 rgba(31, 38, 135, 0.28);
+            background: linear-gradient(135deg, #f7971e 0%, #8ec5fc 100%);
+        }
+        .workbook-card .btn-fun {
+            background: linear-gradient(90deg, #8ec5fc 0%, #e0c3fc 100%);
+            color: #2d3a4b !important;
+            font-weight: bold;
+            border-radius: 1.5rem;
+            border: none;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+        .workbook-card .btn-fun:hover {
+            background: linear-gradient(90deg, #f7971e 0%, #ffd200 100%);
+            color: #fff !important;
+            transform: scale(1.10);
+        }
+        .profile-img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #ffd200;
+            box-shadow: 0 2px 8px #ffd20055;
+        }
+        .fade-in {
+            animation: fadeIn 0.8s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-action-btns button, .card-action-btns a {
+            margin-right: 0.5rem;
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.min.js" integrity="sha384-RuyvpeZCxMJCqVUGFI0Do1mQrods/hhxYlcVfGPOfQtPJh0JCw12tUAZ/Mv10S7D" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
@@ -10,108 +146,165 @@
     <title>Title</title>
 </head>
 
-<body id="bod1">
-    <div class="row">
-        <div class="d-flex col-sm-2 flex-column flex-shrink-0 p-3 bg-light" style="width: 280px;height:100vh">
-            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-                <svg class="bi me-2" width="40" height="32">
-                    <use xlink:href="#bootstrap"></use>
-                </svg>
-                <span class="fs-4">Sidebar</span>
-            </a>
-            <hr>
-            <ul class="nav nav-pills flex-column mb-auto">
-                <li class="nav-item">
-                    <a id="school_profile_button" href="#" class="nav-link active" aria-current="page">
-                        <svg class="bi me-2" width="16" height="16">
-                            <use xlink:href="#home"></use>
-                        </svg>
-                        Profile
-                    </a>
-                </li>
-                <!--                 <li>
-                    <a id="teacher_requests_button" href="#" class="nav-link link-dark">
-                        <svg class="bi me-2" width="16" height="16">
-                            <use xlink:href="#speedometer2"></use>
-                        </svg>
-                        Teacher Requests 
-                        
-                    </a>
-                </li> -->
-                <li>
-                    <a id="student_requests_button" href="#" class="nav-link link-dark">
-                        <svg class="bi me-2" width="16" height="16">
-                            <use xlink:href="#speedometer2"></use>
-                        </svg>
-                        Student Requests {% if request.user.SchoolProfile.student_requests.count > 0 %}
-                        ({{ request.user.SchoolProfile.student_requests.count }})
-                        {% endif %}
-                    </a>
-                </li>
-                <li>
-                    <a id="school_teachers_button" href="#" class="nav-link link-dark">
-                        <svg class="bi me-2" width="16" height="16">
-                            <use xlink:href="#speedometer2"></use>
-                        </svg>
-                        Teachers
-                    </a>
-                </li>
-                <li>
-                    <a id="school_add_workbooks_button" href="#" class="nav-link link-dark">
-                        <svg class="bi me-2" width="16" height="16">
-                            <use xlink:href="#speedometer2"></use>
-                        </svg>
-                        List of Workbooks
-                    </a>
-                </li>
-                <li>
-                    <a id="school_assign_workbook_button" href="#" class="nav-link link-dark">
-                        <svg class="bi me-2" width="16" height="16">
-                            <use xlink:href="#speedometer2"></use>
-                        </svg>
-                        Assign Workbook
-                    </a>
-                </li>
-                <li>
-                    <a id="school_assign_class_subject_button" href="#" class="nav-link link-dark">
-                        <svg class="bi me-2" width="16" height="16">
-                            <use xlink:href="#speedometer2"></use>
-                        </svg>
-                        Assign Class/Subject
-                    </a>
-                </li>
-            </ul>
-            <hr>
-            <a href="/logout_user">Logout</a>
-            <!--    <div class="dropdown">-->
-            <!--      <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">-->
-            <!--        <img src="" alt="" width="32" height="32" class="rounded-circle me-2">-->
-            <!--        <strong>mdo</strong>-->
-            <!--      </a>-->
-            <!--    </div>-->
-        </div>
-        <div id="school_profile" style="display:block;" class="col  card my-2 py-3 px-3 my-3 mx-3">
-            <h5>School</h5>
-            <div class="row mx-2">
-                <div class="col col-sm-5.5 p-2 card">
-                    <div class="row">
-                        <div class="col col-sm-2 mx-2">
-                            <img style="width: 70px; height:70px;" class="rounded-circle user_img" src="{{SchoolProfile.schoolImg.url}}">
+<body style="background: url('https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat fixed; min-height: 100vh;">
+    <div class="container-fluid">
+        <button class="btn btn-warning sidebar-toggle-btn d-lg-none position-fixed top-0 start-0 m-3 z-3" style="z-index:2000; border-radius:1.5rem; font-weight:bold; box-shadow:0 2px 8px #ffd20055;" onclick="document.querySelector('.sidebar').classList.toggle('sidebar-open')">
+            <i class="fa fa-bars"></i>
+        </button>
+        <div class="row">
+            <nav class="col-lg-2 d-none d-lg-block bg-white shadow-lg sidebar py-4 px-3" style="border-radius:2rem 0 0 2rem; min-height:100vh; background:rgba(255,255,255,0.95)!important;">
+                <div class="text-center mb-4">
+                    <img src="https://img.icons8.com/color/96/000000/school.png" alt="School Logo" style="width:64px;">
+                    <h4 class="fw-bold mt-2">School Portal</h4>
+                </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2"><a class="nav-link active" id="school_profile_button" href="#"><i class="fa-solid fa-user me-2"></i>Profile</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link" id="student_requests_button" href="#"><i class="fa-solid fa-user-graduate me-2"></i>Student Requests</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link" id="school_teachers_button" href="#"><i class="fa-solid fa-chalkboard-teacher me-2"></i>Teachers</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link" id="school_add_workbooks_button" href="#"><i class="fa-solid fa-book me-2"></i>List of Workbooks</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link" id="school_assign_workbook_button" href="#"><i class="fa-solid fa-book-open-reader me-2"></i>Assign Workbook</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link" id="school_assign_class_subject_button" href="#"><i class="fa-solid fa-layer-group me-2"></i>Assign Class/Subject</a></li>
+                </ul>
+                <div class="mt-5 text-center">
+                    <a href="/logout_user" class="btn btn-primary px-4 py-2"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</a>
+                </div>
+            </nav>
+        <div id="school_profile" style="display:block;" class="col my-2 py-3 px-3 my-3 mx-3">
+            <section class="school-hero-section fade-in">
+                <div class="school-hero-bg-shape"></div>
+                <div class="school-hero-content">
+                    <div class="school-hero-avatar">
+                        <img src="{{SchoolProfile.schoolImg.url}}" alt="School Logo" />
+                    </div>
+                    <div class="school-hero-info">
+                        <h1 class="school-hero-title">{{request.user.SchoolProfile.name}}</h1>
+                        <div class="school-hero-divider"></div>
+                        <div class="school-hero-grid">
+                            <div class="school-hero-item"><i class="fa-solid fa-envelope"></i> <span>{{request.user.SchoolProfile.email}}</span></div>
+                            <div class="school-hero-item"><i class="fa-solid fa-phone"></i> <span>{{request.user.SchoolProfile.phone}}</span></div>
+                            <div class="school-hero-item"><i class="fa-solid fa-city"></i> <span>{{request.user.SchoolProfile.city}}</span></div>
+                            <div class="school-hero-item"><i class="fa-solid fa-map-marker-alt"></i> <span>{{request.user.SchoolProfile.state}}</span></div>
                         </div>
-                        <div class="col col-sm-9">
-                            <h4>{{request.user.SchoolProfile.name}}</h4>
-                            <hr />
-                        </div>
-                        <div class="m-3">
-                            <h7>Email: {{request.user.SchoolProfile.email}}</h7><br>
-                            <h7>Phone: {{request.user.SchoolProfile.phone}}</h7><br>
-                            <h7>City: {{request.user.SchoolProfile.city}}</h7><br>
-                            <h7>State: {{request.user.SchoolProfile.state}}</h7><br>
-                            <a href="/edit_school/{{SchoolProfile.user.id}}"><i><small>Edit School</small></i></a>
-                        </div>
+                        <a href="/edit_school/{{SchoolProfile.user.id}}" class="school-hero-edit-btn">Edit School</a>
                     </div>
                 </div>
-            </div>
+            </section>
+            <style>
+                .school-hero-section {
+                    position: relative;
+                    min-height: 340px;
+                    margin: 0 auto 2rem auto;
+                    padding: 3.5rem 2rem 2.5rem 2rem;
+                    border-radius: 2.5rem;
+                    overflow: hidden;
+                    background: rgba(255,255,255,0.18);
+                    box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+                    backdrop-filter: blur(16px) saturate(180%);
+                    -webkit-backdrop-filter: blur(16px) saturate(180%);
+                    z-index: 1;
+                }
+                .school-hero-bg-shape {
+                    position: absolute;
+                    top: -60px; left: -80px;
+                    width: 420px; height: 420px;
+                    background: radial-gradient(circle at 60% 40%, #ffd200cc 0%, #f7971e88 60%, transparent 100%);
+                    filter: blur(32px);
+                    z-index: 0;
+                }
+                .school-hero-content {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    z-index: 2;
+                }
+                .school-hero-avatar {
+                    flex-shrink: 0;
+                    width: 120px; height: 120px;
+                    border-radius: 50%;
+                    background: rgba(255,255,255,0.7);
+                    box-shadow: 0 4px 24px 0 #ffd20055;
+                    display: flex; align-items: center; justify-content: center;
+                    margin-right: 2.5rem;
+                    border: 4px solid #ffd200;
+                }
+                .school-hero-avatar img {
+                    width: 104px; height: 104px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                    border: 2px solid #fff;
+                    box-shadow: 0 2px 8px #ffd20055;
+                    background: #fff;
+                }
+                .school-hero-info {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+                .school-hero-title {
+                    font-size: 2.7rem;
+                    font-weight: 900;
+                    color: #2d3a4b;
+                    text-shadow: 1px 2px 12px #b2d8f7;
+                    margin-bottom: 0.5rem;
+                }
+                .school-hero-divider {
+                    height: 3px;
+                    width: 80px;
+                    background: linear-gradient(90deg,#f7971e 0%,#ffd200 100%);
+                    border-radius: 1.5rem;
+                    margin-bottom: 1.2rem;
+                }
+                .school-hero-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 0.7rem 2.5rem;
+                    margin-bottom: 1.5rem;
+                    width: 100%;
+                }
+                .school-hero-item {
+                    font-size: 1.15rem;
+                    color: #2d3a4b;
+                    background: rgba(255,255,255,0.55);
+                    border-radius: 1.2rem;
+                    padding: 0.7rem 1.2rem;
+                    box-shadow: 0 2px 8px #ffd20022;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.7rem;
+                    font-weight: 600;
+                }
+                .school-hero-item i {
+                    color: #f7971e;
+                    font-size: 1.2em;
+                }
+                .school-hero-edit-btn {
+                    display: inline-block;
+                    margin-top: 0.5rem;
+                    padding: 0.7rem 2.2rem;
+                    border-radius: 2rem;
+                    background: linear-gradient(90deg,#8ec5fc 0%,#e0c3fc 100%);
+                    color: #2d3a4b;
+                    font-weight: bold;
+                    border: none;
+                    box-shadow: 0 2px 8px #ffd20055;
+                    font-size: 1.1rem;
+                    transition: background 0.2s, color 0.2s, transform 0.2s;
+                    text-decoration: none;
+                }
+                .school-hero-edit-btn:hover {
+                    background: linear-gradient(90deg,#f7971e 0%,#ffd200 100%);
+                    color: #fff;
+                    transform: scale(1.06);
+                }
+                @media (max-width: 768px) {
+                    .school-hero-content { flex-direction: column; align-items: center; }
+                    .school-hero-avatar { margin-right: 0; margin-bottom: 1.5rem; }
+                    .school-hero-info { align-items: center; }
+                    .school-hero-title { text-align: center; }
+                    .school-hero-grid { grid-template-columns: 1fr; gap: 0.7rem 0; }
+                }
+            </style>
         </div>
         <div id="student_request" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
             <h5>Student Requests</h5>
@@ -189,63 +382,289 @@
             </div>
             {% endif %}
             <div class="row mx-2">
-                <div class="col col-sm-5.5 p-2 card">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            {% if request.user.SchoolProfile.teachers.count > 0 %}
-                            {% for i in request.user.SchoolProfile.teachers.all %}
-                            <div class="card my-2 mx-2 px-2 py-2">
-                                <div class="row">
-                                    <div class="col col-sm-2 mx-2">
-                                        <img style="width: 60px; height:60px;" class="rounded-circle user_img" src="{{SchoolProfile.schoolImg.url}}">
-                                    </div>
-                                    <div class="col col-sm-8">
-                                        <h5>{{i.TeacherProfile.first_name}} {{i.TeacherProfile.last_name}}</h5>
-                                        <hr />
+                <div class="col-12">
+                    <div class="teacher-hero-list">
+                        {% if request.user.SchoolProfile.teachers.count > 0 %}
+                        {% for i in request.user.SchoolProfile.teachers.all %}
+                        <section class="teacher-hero-section fade-in mb-4">
+                            <div class="teacher-hero-bg-shape"></div>
+                            <div class="teacher-hero-content">
+                                <div class="teacher-hero-avatar">
+                                    <img src="{{i.TeacherProfile.teacherImg.url}}" alt="Teacher Photo" />
+                                </div>
+                                <div class="teacher-hero-info">
+                                    <h2 class="teacher-hero-title">{{i.TeacherProfile.first_name}} {{i.TeacherProfile.last_name}}</h2>
+                                    <div class="teacher-hero-divider"></div>
+                                    <div class="teacher-hero-grid">
                                         {% for key, value in i.TeacherProfile.class_subject_map.items %}
-                                        <div class="row">
-                                            <div class="col"></div>
-                                            <div class="col"></div>
-                                            <div class="col-sm-4">{{ key }}</div>
-                                            {% for j in value %}
-                                            <div class="col-sm-4">{{ j }}</div>
-                                            {% endfor %}
-                                        </div>
+                                            <div class="teacher-hero-item"><i class="fa-solid fa-chalkboard"></i> <span>Class: {{ key }}</span></div>
+                                            <div class="teacher-hero-item"><i class="fa-solid fa-book"></i> <span>Subjects: {{ value|join:', ' }}</span></div>
                                         {% endfor %}
                                     </div>
-                                    <div class="col col-sm-2">
-                                        <button id="remove_teacher" value="{{i.id}}" class="btn btn-primary">Remove</button>
-                                    </div>
-                                    <div class="col col-sm-2">
-                                        <a href="/edit_teacher/{{i.id}}" class="btn btn-primary">Edit</a>
+                                    <div class="teacher-hero-actions mt-2">
+                                        <button id="remove_teacher" value="{{i.id}}" class="btn btn-primary teacher-hero-btn">Remove</button>
+                                        <a href="/edit_teacher/{{i.id}}" class="btn btn-primary edit-teacher-btn teacher-hero-btn">Edit</a>
                                     </div>
                                 </div>
                             </div>
-                            {% endfor %}
-                            {% else %}
-                            <h5 class="card-title">No Teacher</h5>
-                            {% endif %}
+                        </section>
+                        {% endfor %}
+                        {% else %}
+                        <h5 class="card-title">No Teacher</h5>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <style>
+                .teacher-hero-section {
+                    position: relative;
+                    min-height: 180px;
+                    margin: 0 auto 1.5rem auto;
+                    padding: 2.2rem 1.5rem 1.5rem 1.5rem;
+                    border-radius: 2rem;
+                    overflow: hidden;
+                    background: rgba(255,255,255,0.18);
+                    box-shadow: 0 4px 24px 0 rgba(31,38,135,0.13);
+                    backdrop-filter: blur(12px) saturate(160%);
+                    -webkit-backdrop-filter: blur(12px) saturate(160%);
+                    z-index: 1;
+                    transition: box-shadow 0.2s, transform 0.2s;
+                }
+                .teacher-hero-section:hover {
+                    box-shadow: 0 8px 32px 0 rgba(31,38,135,0.22);
+                    transform: scale(1.02);
+                }
+                .teacher-hero-bg-shape {
+                    position: absolute;
+                    top: -40px; left: -60px;
+                    width: 220px; height: 220px;
+                    background: radial-gradient(circle at 60% 40%, #8ec5fc99 0%, #ffd20055 70%, transparent 100%);
+                    filter: blur(24px);
+                    z-index: 0;
+                }
+                .teacher-hero-content {
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    z-index: 2;
+                }
+                .teacher-hero-avatar {
+                    flex-shrink: 0;
+                    width: 80px; height: 80px;
+                    border-radius: 50%;
+                    background: rgba(255,255,255,0.7);
+                    box-shadow: 0 2px 8px 0 #ffd20033;
+                    display: flex; align-items: center; justify-content: center;
+                    margin-right: 1.5rem;
+                    border: 3px solid #8ec5fc;
+                }
+                .teacher-hero-avatar img {
+                    width: 68px; height: 68px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                    border: 2px solid #fff;
+                    box-shadow: 0 2px 8px #ffd20033;
+                    background: #fff;
+                }
+                .teacher-hero-info {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+                .teacher-hero-title {
+                    font-size: 1.7rem;
+                    font-weight: 800;
+                    color: #2d3a4b;
+                    text-shadow: 1px 2px 8px #b2d8f7;
+                    margin-bottom: 0.3rem;
+                }
+                .teacher-hero-divider {
+                    height: 2px;
+                    width: 50px;
+                    background: linear-gradient(90deg,#8ec5fc 0%,#ffd200 100%);
+                    border-radius: 1rem;
+                    margin-bottom: 0.8rem;
+                }
+                .teacher-hero-grid {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 0.5rem 1.5rem;
+                    margin-bottom: 0.7rem;
+                    width: 100%;
+                }
+                .teacher-hero-item {
+                    font-size: 1.05rem;
+                    color: #2d3a4b;
+                    background: rgba(255,255,255,0.55);
+                    border-radius: 1rem;
+                    padding: 0.5rem 1rem;
+                    box-shadow: 0 2px 8px #ffd20011;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    font-weight: 600;
+                }
+                .teacher-hero-item i {
+                    color: #8ec5fc;
+                    font-size: 1.1em;
+                }
+                .teacher-hero-actions {
+                    display: flex;
+                    gap: 0.7rem;
+                }
+                .teacher-hero-btn {
+                    border-radius: 1.5rem !important;
+                    background: linear-gradient(90deg,#8ec5fc 0%,#e0c3fc 100%) !important;
+                    color: #2d3a4b !important;
+                    font-weight: bold !important;
+                    border: none !important;
+                    box-shadow: 0 2px 8px #ffd20033 !important;
+                    font-size: 1rem !important;
+                    transition: background 0.2s, color 0.2s, transform 0.2s !important;
+                }
+                .teacher-hero-btn:hover {
+                    background: linear-gradient(90deg,#f7971e 0%,#ffd200 100%) !important;
+                    color: #fff !important;
+                    transform: scale(1.06);
+                }
+                @media (max-width: 768px) {
+                    .teacher-hero-content { flex-direction: column; align-items: center; }
+                    .teacher-hero-avatar { margin-right: 0; margin-bottom: 1rem; }
+                    .teacher-hero-info { align-items: center; }
+                    .teacher-hero-title { text-align: center; }
+                    .teacher-hero-grid { grid-template-columns: 1fr; gap: 0.5rem 0; }
+                }
+            </style>
+        </div>
+        <div id="add_workbooks" style="display:none;" class="col my-2 py-3 px-3 my-3 mx-3">
+            <section class="workbook-fun-section fade-in">
+                <div class="workbook-fun-bg"></div>
+                <h2 class="workbook-fun-title"><i class="fa-solid fa-book-open-reader me-2"></i>Add Workbooks</h2>
+                <div class="row g-4 justify-content-center">
+                    {% for i in request.worksheet.all %}
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="workbook-fun-card">
+                            <div class="workbook-fun-emoji">📚</div>
+                            <div class="workbook-fun-info">
+                                <div class="workbook-fun-name">{{i.worksheet_name}}</div>
+                                <div class="workbook-fun-meta">Class: <span>{{i.standard}}</span> | Subject: <span>{{i.subject}}</span></div>
+                                <div class="workbook-fun-chapter">Chapter: <span>{{i.chapter}}</span></div>
+                            </div>
+                            <div class="workbook-fun-action">
+                                {% if i in request.user.SchoolProfile.school_workbooks.all %}
+                                <button value="{{i.worksheet_id}}" id="remove_workbook" class="btn workbook-fun-btn btn-danger">Remove</button>
+                                {% else %}
+                                <button value="{{i.worksheet_id}}" id="add_workbook" class="btn workbook-fun-btn btn-primary">Add</button>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-            </div>
-        </div>
-        <div id="add_workbooks" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
-            <h5>Add Workbooks</h5>
-            <div class="row mx-2">
-                {% for i in request.worksheet.all %}
-                <div class="col col-sm-5 p-2 m-2">
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">{{i.worksheet_name}} | {{i.standard}} | {{i.subject}} | {{i.chapter}}</span>
-                    </div>
-                </div>
-                {% if i in request.user.SchoolProfile.school_workbooks.all %}
-                <div class="col col-sm-4 m-2"><button value="{{i.worksheet_id}}" id="remove_workbook" class="btn btn-danger">Remove</button></div>
-                {% else %}
-                <div class="col col-sm-4 m-2"><button value="{{i.worksheet_id}}" id="add_workbook" class="btn btn-primary">Add</button></div>
-                {% endif %}
-                {% endfor %}
-            </div>
+            </section>
+            <style>
+                .workbook-fun-section {
+                    position: relative;
+                    background: rgba(255,255,255,0.18);
+                    border-radius: 2.5rem;
+                    box-shadow: 0 8px 32px 0 rgba(31,38,135,0.13);
+                    padding: 2.5rem 1.5rem 2rem 1.5rem;
+                    margin-bottom: 2rem;
+                    overflow: hidden;
+                    min-height: 220px;
+                }
+                .workbook-fun-bg {
+                    position: absolute;
+                    top: -60px; left: -80px;
+                    width: 350px; height: 350px;
+                    background: radial-gradient(circle at 60% 40%, #ffd200cc 0%, #8ec5fc88 60%, transparent 100%);
+                    filter: blur(32px);
+                    z-index: 0;
+                }
+                .workbook-fun-title {
+                    font-size: 2.1rem;
+                    font-weight: 900;
+                    color: #f7971e;
+                    text-shadow: 1px 2px 12px #b2d8f7;
+                    margin-bottom: 2.2rem;
+                    text-align: center;
+                    z-index: 2;
+                    position: relative;
+                }
+                .workbook-fun-card {
+                    background: rgba(255,255,255,0.85);
+                    border-radius: 2rem;
+                    box-shadow: 0 4px 24px 0 rgba(31,38,135,0.10);
+                    display: flex;
+                    align-items: center;
+                    gap: 1.2rem;
+                    padding: 1.2rem 1.5rem;
+                    margin-bottom: 1.2rem;
+                    position: relative;
+                    transition: box-shadow 0.2s, transform 0.2s;
+                    z-index: 2;
+                }
+                .workbook-fun-card:hover {
+                    box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+                    transform: scale(1.03);
+                }
+                .workbook-fun-emoji {
+                    font-size: 2.5rem;
+                    background: linear-gradient(135deg, #f7971e 0%, #8ec5fc 100%);
+                    border-radius: 50%;
+                    width: 60px; height: 60px;
+                    display: flex; align-items: center; justify-content: center;
+                    box-shadow: 0 2px 8px #ffd20055;
+                }
+                .workbook-fun-info {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.2rem;
+                }
+                .workbook-fun-name {
+                    font-size: 1.25rem;
+                    font-weight: 700;
+                    color: #2d3a4b;
+                }
+                .workbook-fun-meta, .workbook-fun-chapter {
+                    font-size: 1.05rem;
+                    color: #555;
+                }
+                .workbook-fun-meta span, .workbook-fun-chapter span {
+                    color: #f7971e;
+                    font-weight: 600;
+                }
+                .workbook-fun-action {
+                    display: flex;
+                    align-items: center;
+                }
+                .workbook-fun-btn {
+                    border-radius: 1.5rem !important;
+                    background: linear-gradient(90deg,#8ec5fc 0%,#e0c3fc 100%) !important;
+                    color: #2d3a4b !important;
+                    font-weight: bold !important;
+                    border: none !important;
+                    box-shadow: 0 2px 8px #ffd20033 !important;
+                    font-size: 1rem !important;
+                    transition: background 0.2s, color 0.2s, transform 0.2s !important;
+                    padding: 0.5rem 1.5rem !important;
+                }
+                .workbook-fun-btn.btn-danger {
+                    background: linear-gradient(90deg,#ffd200 0%,#f7971e 100%) !important;
+                    color: #fff !important;
+                }
+                .workbook-fun-btn:hover {
+                    background: linear-gradient(90deg,#f7971e 0%,#ffd200 100%) !important;
+                    color: #fff !important;
+                    transform: scale(1.08);
+                }
+                @media (max-width: 768px) {
+                    .workbook-fun-card { flex-direction: column; align-items: flex-start; gap: 0.7rem; }
+                    .workbook-fun-emoji { margin-bottom: 0.5rem; }
+                }
+            </style>
         </div>
         <div id="assign_workbook" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
             <h5 style="text-align:center;">List of Workbook</h5>
@@ -563,29 +982,26 @@ $(document).on('click', '#remove_teacher', function(event) {
 });
 $(document).on('click', '#assign_class_subject_submit_button', function(event) {
     event.preventDefault();
-
-
     var ldata = {
         'teacher': $('#teacher').val(),
         'standard': $('#standard').val(),
         'subject': $('#subject').val(),
     };
     $.ajax({
-            type: 'POST',
-            url: '/assign_class_subject',
-            data: ldata,
-            encode: true
-        })
-        .done(function(id) {
-            var url = "/";
-            $(`#assign_class_subject`).load(url + ` #assign_class_subject`);
-            document.getElementById("assign_class_subject").style.display = "block";
-
-
-        })
-
-
-
+        type: 'POST',
+        url: '/assign_class_subject',
+        data: ldata,
+        encode: true
+    }).done(function(data) {
+        // Show a success message and keep the section visible
+        let msg = $('<div class="alert alert-success mt-2">Class/Subject assigned successfully!</div>');
+        $('#assign_class_subject').prepend(msg);
+        setTimeout(function() { msg.fadeOut(500, function() { $(this).remove(); }); }, 2000);
+        // Optionally reset selects
+        $('#teacher').val($('#teacher option:first').val());
+        $('#standard').val($('#standard option:first').val());
+        $('#subject').empty();
+    });
 });
 $('#standard').on('change', function(event) {
     event.preventDefault();
@@ -624,23 +1040,35 @@ $('#standard').on('change', function(event) {
         })
 
 });
-$(document).on('click', '#add_workbook', function(event) {
-
-    console.log($(this).val());
-    var ldata = {
-        "workbook_id": $(this).val()
-    };
+// Add/Remove workbook button instant toggle
+// Add/Remove workbook button instant toggle (no page refresh)
+$(document).on('click', '#add_workbook, #remove_workbook', function(event) {
+    event.preventDefault();
+    var $btn = $(this);
+    var isAdd = $btn.attr('id') === 'add_workbook';
+    var url = isAdd ? '/add_workbook' : '/remove_workbook';
+    var ldata = { "workbook_id": $btn.val() };
     $.ajax({
-            type: 'POST',
-            url: '/add_workbook',
-            data: ldata,
-            encode: true
-        })
-        .done(function(data) {
-            // var url = "/";
-            // $(`#add_workbooks`).load(url + ` #add_workbooks`);
-        });
-
+        type: 'POST',
+        url: url,
+        data: ldata,
+        encode: true
+    }).done(function(data) {
+        // Toggle button state and style instantly
+        if (isAdd) {
+            $btn
+                .removeClass('btn-primary')
+                .addClass('btn-danger')
+                .attr('id', 'remove_workbook')
+                .text('Remove');
+        } else {
+            $btn
+                .removeClass('btn-danger')
+                .addClass('btn-primary')
+                .attr('id', 'add_workbook')
+                .text('Add');
+        }
+    });
 });
 
 $('#assign_workbook_teacher').on('change', function(event) {
@@ -695,25 +1123,77 @@ $('#assign_workbook_standard').on('change', function(event) {
 
 $(document).on('click', '#assign_workbook_submit_button', function(event) {
     event.preventDefault();
-
     var ldata = {
         'teacher_id': $('#assign_workbook_teacher').val(),
         'standard': $('#assign_workbook_standard').val(),
         'worksheet_id': $('#assign_workbook_workbook').val()
-
     };
     $.ajax({
-            type: 'POST',
-            url: '/assign_worksheet',
-            data: ldata,
-            encode: true
-
-        })
-        .done(function(data) {
-            var url = "/";
-            $(`#assign_workbook`).load(url + ` #assign_workbook`);
+        type: 'POST',
+        url: '/assign_worksheet',
+        data: ldata,
+        encode: true
+    }).done(function(data) {
+        // Instead of reloading the section, show a success message and keep the section visible
+        let msg = $('<div class="alert alert-success mt-2">Workbook assigned successfully!</div>');
+        $('#assign_workbook').prepend(msg);
+        setTimeout(function() { msg.fadeOut(500, function() { $(this).remove(); }); }, 2000);
+        // Optionally reset selects
+        $('#assign_workbook_teacher').val($('#assign_workbook_teacher option:first').val());
+        $('#assign_workbook_standard').empty().append('<option selected disabled>Standard</option>');
+        $('#assign_workbook_workbook').empty().append('<option selected disabled>Workbooks</option>');
+    });
+});
+// Teacher Edit: load edit form in modal, update instantly
+// Teacher Edit: load edit form in modal, update instantly (Bootstrap 5 API)
+$(document).on('click', '.edit-teacher-btn', function(event) {
+    event.preventDefault();
+    var url = $(this).attr('href');
+    // Create modal if not exists
+    if ($('#editTeacherModal').length === 0) {
+        $('body').append('<div class="modal fade" id="editTeacherModal" tabindex="-1" aria-hidden="true"><div class="modal-dialog modal-lg modal-dialog-centered"><div class="modal-content"><div class="modal-header"><h5 class="modal-title w-100 text-center">Edit Teacher</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div><div class="modal-body"></div></div></div></div>');
+    }
+    var modalEl = document.getElementById('editTeacherModal');
+    var $modal = $('#editTeacherModal');
+    $modal.find('.modal-body').html('<div class="d-flex justify-content-center align-items-center" style="min-height:200px"><div class="spinner-border text-primary" role="status"></div></div>');
+    // Use Bootstrap 5 Modal API
+    var bsModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    bsModal.show();
+    // Load form
+    $.get(url, function(data) {
+        $modal.find('.modal-body').html('<div class="d-flex justify-content-center align-items-center" style="min-height:200px"><div class="w-100">'+data+'</div></div>');
+        // Prettify form
+        $modal.find('form').addClass('p-3').css({'background':'#f8f9fa','border-radius':'1.5rem','max-width':'500px','margin':'0 auto'});
+        $modal.find('input,select,textarea').addClass('form-control mb-2').css({'border-radius':'1rem'});
+        $modal.find('button[type="submit"]').addClass('btn btn-success').css({'border-radius':'1.5rem','background':'linear-gradient(90deg,#f7971e 0%,#ffd200 100%)','color':'#fff','font-weight':'bold','width':'100%'});
+        // Attach AJAX submit handler after form is loaded
+        $modal.find('form').off('submit').on('submit', function(e) {
+            e.preventDefault();
+            var form = this;
+            var formData = new FormData(form);
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    $modal.modal('hide');
+                    // Wait for modal to fully hide before updating section
+                    $modal.on('hidden.bs.modal', function() {
+                        var url = window.location.pathname;
+                        $('#school_teachers').load(url + ' #school_teachers > *', function() {
+                            $('<div class="alert alert-success mt-2">Teacher updated successfully!</div>').prependTo('#school_teachers').delay(2000).fadeOut(500, function() { $(this).remove(); });
+                        });
+                        $modal.off('hidden.bs.modal');
+                    });
+                },
+                error: function() {
+                    $('<div class="alert alert-danger mt-2">Update failed. Please try again.</div>').prependTo($modal.find('.modal-body'));
+                }
+            });
         });
-
+    });
 });
 </script>
 

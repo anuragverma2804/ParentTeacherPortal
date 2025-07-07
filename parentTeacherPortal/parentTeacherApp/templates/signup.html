@@ -7,173 +7,189 @@
     <title>Sign Up</title>
 </head>
 
-<body>
-    <div>
-        <label class="form-label">Role</label>
-        <select id="role_select" class="form-select  mb-4" aria-label="Default select example" name="role">
-            <option value="student">Student</option>
-            <option value="teacher">Teacher</option>
-            <option value="school">School</option>
-        </select>
-    </div>
-    <div id="student_login_form" style="display: flex;justify-content: center;" class="mt-5">
-        <form action="/signup/" method="post" id="form">{% csrf_token %}
-            <input type="text" id="role" class="form-control" required name="role" hidden value="student" />
-            <!-- Email input -->
-            <div class="form-outline mb-4">
-                <label class="form-label" for="fname">First Name</label>
-                <input type="text" id="fname" class="form-control" required name="fname" />
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="lname">Last Name</label>
-                <input type="text" id="lname" class="form-control" required name="lname" />
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="email">Email Address</label>
-                <input type="email" id="email" class="form-control" required name="email" />
-            </div>
-            <label class="form-label">Class</label>
-            <select class="form-select  mb-4" aria-label="Default select example" name="standard">
-                <option value="I">I</option>
-                <option value="II">II</option>
-                <option value="III">III</option>
-                <option value="IV">IV</option>
-                <option value="V">V</option>
-                <option value="VI">VI</option>
-                <option value="VII">VII</option>
-                <option value="VIII">VIII</option>
-                <option value="IX">IX</option>
-                <option value="X">X</option>
-                <option value="XI">XI</option>
-                <option value="XII">XII</option>
-            </select>
-            <div class="form-row ml-2">
-                <div class="form-group my-2 col-md-10">
-                    <label for="passportphoto">Profile Picture</label>
-                    <!-- <input type="file" class="form-control-file" id="passportphoto" name="passportphoto" accept="image/*"> -->
-                    <input class="form-control form-control-lg" id="profile_img" name="passportphoto" type="file" accept="image/*" />
+<body style="background: url('https://images.unsplash.com/photo-1508780709619-79562169bc64?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat fixed; min-height: 100vh;">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <div class="card shadow-lg p-4 fade-in" style="border-radius:2rem; background:rgba(255,255,255,0.93);">
+                    <div class="text-center mb-3">
+                        <img src="https://img.icons8.com/color/96/000000/school.png" alt="School Logo" style="width:56px;">
+                        <h2 class="fw-bold mt-2" style="color:#f7971e;">Sign Up</h2>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Role</label>
+                        <select id="role_select" class="form-select" aria-label="Default select example" name="role">
+                            <option value="student">Student</option>
+                            <option value="teacher">Teacher</option>
+                            <option value="school">School</option>
+                        </select>
+                    </div>
+                    <div id="student_login_form" style="display: flex;justify-content: center;">
+                        <form action="/signup/" method="post" id="form" enctype="multipart/form-data" class="w-100">{% csrf_token %}
+                            <input type="text" id="role" class="form-control" required name="role" hidden value="student" />
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="fname">First Name</label>
+                                    <input type="text" id="fname" class="form-control" required name="fname" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="lname">Last Name</label>
+                                    <input type="text" id="lname" class="form-control" required name="lname" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="email">Email Address</label>
+                                    <input type="email" id="email" class="form-control" required name="email" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Class</label>
+                                    <select class="form-select" aria-label="Default select example" name="standard">
+                                        <option value="I">I</option>
+                                        <option value="II">II</option>
+                                        <option value="III">III</option>
+                                        <option value="IV">IV</option>
+                                        <option value="V">V</option>
+                                        <option value="VI">VI</option>
+                                        <option value="VII">VII</option>
+                                        <option value="VIII">VIII</option>
+                                        <option value="IX">IX</option>
+                                        <option value="X">X</option>
+                                        <option value="XI">XI</option>
+                                        <option value="XII">XII</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="profile_img">Profile Picture</label>
+                                    <input class="form-control form-control-lg" id="profile_img" name="passportphoto" type="file" accept="image/*" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="guardian_name">Guardian Name</label>
+                                    <input type="text" id="guardian_name" class="form-control" required name="guardian_name" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="number">Phone Number</label>
+                                    <input type="phone" id="number" class="form-control" required name="number" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">School</label>
+                                    <select class="form-select" id="student_school_select" aria-label="Default select example" name="student_school">
+                                        <option selected></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="pass1">Password</label>
+                                    <input type="password" id="pass1" class="form-control" required name="pass1" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="pass2">Confirm Password</label>
+                                    <input type="password" id="pass2" class="form-control" required name="pass2" />
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 mt-3" style="border-radius:1.5rem; font-weight:bold;">Sign up</button>
+                        </form>
+                    </div>
+                    <div id="school_login_form" style="display:none;justify-content: center;">
+                        <form action="/signup/" method="post" id="form" enctype="multipart/form-data" class="w-100">{% csrf_token %}
+                            <input type="text" id="role" class="form-control" required name="role" hidden value="school" />
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="school_name">School Name</label>
+                                    <input type="text" id="school_name" class="form-control" required name="school_name" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="email">Email Address</label>
+                                    <input type="email" id="email" class="form-control" required name="email" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="profile_img">Profile Picture</label>
+                                    <input class="form-control form-control-lg" id="profile_img" name="passportphoto" type="file" accept="image/*" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="number">Phone Number</label>
+                                    <input type="phone" id="number" class="form-control" required name="number" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="city">City</label>
+                                    <input type="text" id="city" class="form-control" required name="city" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="state">State</label>
+                                    <input type="text" id="state" class="form-control" required name="state" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="pin_code">Pin Code</label>
+                                    <input type="phone" id="pin_code" class="form-control" required name="pin_code" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="pass1">Password</label>
+                                    <input type="password" id="pass1" class="form-control" required name="pass1" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="pass2">Confirm Password</label>
+                                    <input type="password" id="pass2" class="form-control" required name="pass2" />
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 mt-3" style="border-radius:1.5rem; font-weight:bold;">Sign up</button>
+                        </form>
+                    </div>
+                    <div id="teacher_login_form" style="display:none;justify-content: center;">
+                        <form action="/signup/" method="post" id="form" enctype="multipart/form-data" class="w-100">{% csrf_token %}
+                            <input type="text" id="role" class="form-control" required name="role" hidden value="teacher" />
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <label class="form-label" for="fname">First Name</label>
+                                    <input type="text" id="fname" class="form-control" required name="fname" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="lname">Last Name</label>
+                                    <input type="text" id="lname" class="form-control" required name="lname" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="email">Email Address</label>
+                                    <input type="email" id="email" class="form-control" required name="email" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="profile_img">Profile Picture</label>
+                                    <input class="form-control form-control-lg" id="profile_img" name="passportphoto" type="file" accept="image/*" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="number">Phone Number</label>
+                                    <input type="phone" id="number" class="form-control" required name="number" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">School</label>
+                                    <select class="form-select" id="teacher_school_select" aria-label="Default select example" name="teacher_school">
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="pass1">Password</label>
+                                    <input type="password" id="pass1" class="form-control" required name="pass1" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label" for="pass2">Confirm Password</label>
+                                    <input type="password" id="pass2" class="form-control" required name="pass2" />
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 mt-3" style="border-radius:1.5rem; font-weight:bold;">Sign up</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-            <div id="default_post_tag">
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="guardian_name">Guardian Name</label>
-                <input type="text" id="guardian_name" class="form-control" required name="guardian_name" />
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="number">Phone Number</label>
-                <input type="phone" id="number" class="form-control" required name="number" />
-            </div>
-            <label class="form-label">School</label>
-            <select class="form-select  mb-4" id="student_school_select" aria-label="Default select example" name="student_school">
-                <option selected></option>
-            </select>
-            <!-- Password input -->
-            <div class="form-outline mb-4">
-                <label class="form-label" for="pass1">Password</label>
-                <input type="password" id="pass1" class="form-control" required name="pass1" />
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="pass2">Confirm Password</label>
-                <input type="password" id="pass2" class="form-control" required name="pass2" />
-            </div>
-            <!-- Submit button -->
-            <button style="display: flex;justify-content: center;" type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
-        </form>
+        </div>
     </div>
-    <div id="school_login_form" style="display:none;justify-content: center;" class="mt-5">
-        <form action="/signup/" method="post" id="form">{% csrf_token %}
-            <input type="text" id="role" class="form-control" required name="role" hidden value="school" />
-            <div class="form-outline mb-4">
-                <label class="form-label" for="school_name">School Name</label>
-                <input type="text" id="school_name" class="form-control" required name="school_name" />
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="email">Email Address</label>
-                <input type="email" id="email" class="form-control" required name="email" />
-            </div>
-            <div class="form-row ml-2">
-                <div class="form-group my-2 col-md-10">
-                    <label for="passportphoto">Profile Picture</label>
-                    <!-- <input type="file" class="form-control-file" id="passportphoto" name="passportphoto" accept="image/*"> -->
-                    <input class="form-control form-control-lg" id="profile_img" name="passportphoto" type="file" accept="image/*" />
-                </div>
-            </div>
-            <div id="default_post_tag">
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="number">Phone Number</label>
-                <input type="phone" id="number" class="form-control" required name="number" />
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="city">City</label>
-                <input type="text" id="city" class="form-control" required name="city" />
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="state">State</label>
-                <input type="text" id="state" class="form-control" required name="state" />
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="pin_code">Pin Code</label>
-                <input type="phone" id="pin_code" class="form-control" required name="pin_code" />
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="pass1">Password</label>
-                <input type="password" id="pass1" class="form-control" required name="pass1" />
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="pass2">Confirm Password</label>
-                <input type="password" id="pass2" class="form-control" required name="pass2" />
-            </div>
-            <!-- Submit button -->
-            <button style="display: flex;justify-content: center;" type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
-        </form>
-    </div>
-    <div id="teacher_login_form" style="display:none;justify-content: center;" class="mt-5">
-        <form action="/signup/" method="post" id="form">{% csrf_token %}
-            <input type="text" id="role" class="form-control" required name="role" hidden value="teacher" />
-            <!-- Email input -->
-            <div class="form-outline mb-4">
-                <label class="form-label" for="fname">First Name</label>
-                <input type="text" id="fname" class="form-control" required name="fname" />
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="lname">Last Name</label>
-                <input type="text" id="lname" class="form-control" required name="lname" />
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="email">Email Address</label>
-                <input type="email" id="email" class="form-control" required name="email" />
-            </div>
-            <div class="form-row ml-2">
-                <div class="form-group my-2 col-md-10">
-                    <label for="passportphoto">Profile Picture</label>
-                    <!-- <input type="file" class="form-control-file" id="passportphoto" name="passportphoto" accept="image/*"> -->
-                    <input class="form-control form-control-lg" id="profile_img" name="passportphoto" type="file" accept="image/*" />
-                </div>
-            </div>
-            <div id="default_post_tag">
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="number">Phone Number</label>
-                <input type="phone" id="number" class="form-control" required name="number" />
-            </div>
-            <label class="form-label">School</label>
-            <select class="form-select  mb-4" id="teacher_school_select" aria-label="Default select example" name="teacher_school">
-            </select>
-            <!-- Password input -->
-            <div class="form-outline mb-4">
-                <label class="form-label" for="pass1">Password</label>
-                <input type="password" id="pass1" class="form-control" required name="pass1" />
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="pass2">Confirm Password</label>
-                <input type="password" id="pass2" class="form-control" required name="pass2" />
-            </div>
-            <!-- Submit button -->
-            <button style="display: flex;justify-content: center;" type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
-        </form>
-    </div>
+    <style>
+        body {
+            background: url('https://images.unsplash.com/photo-1508780709619-79562169bc64?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat fixed;
+            min-height: 100vh;
+            font-family: 'Nunito', 'Segoe UI', 'Comic Sans MS', cursive, sans-serif;
+        }
+        .fade-in {
+            animation: fadeIn 0.8s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </body>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <script>

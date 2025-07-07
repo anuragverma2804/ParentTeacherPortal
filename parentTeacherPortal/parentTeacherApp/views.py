@@ -1,3 +1,4 @@
+
 from datetime import datetime
 import os
 from django.conf import settings
@@ -303,7 +304,7 @@ def get_class_subject_list(request):
 
 
 def display_words(request):
-    json_file_path = os.path.join(settings.BASE_DIR, 'parentTeacherApp', 'static', 'data.json')
+    json_file_path = os.path.join(settings.BASE_DIR, 'static', 'data.json')
     with open(json_file_path, 'r') as f:
         data = json.load(f)
         standard = str(data.get("standard", ""))
@@ -327,6 +328,17 @@ def add_workbook(request):
         schoolprofile = request.user.SchoolProfile
         worksheet = Worksheet.objects.get(worksheet_id=request.POST.get('workbook_id'))
         schoolprofile.school_workbooks.add(worksheet)
+        schoolprofile.save()
+    return HttpResponse("Done")
+
+@csrf_exempt
+def remove_workbook(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method == 'POST':
+        schoolprofile = request.user.SchoolProfile
+        worksheet = Worksheet.objects.get(worksheet_id=request.POST.get('workbook_id'))
+        schoolprofile.school_workbooks.remove(worksheet)
         schoolprofile.save()
     return HttpResponse("Done")
 

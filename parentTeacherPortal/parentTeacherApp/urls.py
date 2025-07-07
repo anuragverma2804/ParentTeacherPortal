@@ -14,6 +14,7 @@ urlpatterns = [
     path('edit_student/<int:id>', views.edit_student, name='edit_student'),
     path('edit_teacher/<int:id>', views.edit_teacher, name='edit_teacher'),
     path('add_workbooks', views.add_workbooks, name='add_workbooks'),
+    path('remove_workbook', views.remove_workbook, name='remove_workbook'),
     path('assign_workbook', views.assign_workbook, name='assign_workbook'),
     path('assign_class_subject', views.assign_class_subject, name='assign_class_subject'),
     path('get_class_subject_list', views.get_class_subject_list, name='get_class_subject_list'),
