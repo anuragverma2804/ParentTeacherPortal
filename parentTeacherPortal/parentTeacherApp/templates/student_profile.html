@@ -9,6 +9,7 @@
     <meta charset="UTF-8">
     <title>Student || {{request.user.StudentProfile.first_name}} {{request.user.StudentProfile.last_name}}</title>
 </head>
+{% load humanize %}
 
 <body>
     <div class="row">
@@ -30,12 +31,19 @@
                     </a>
                 </li>
                 <li>
-                    <a id="student_assignment_button" href="#" class="nav-link link-dark">
+                    <a id="student_notification_button" href="#" class="nav-link link-dark">
                         <svg class="bi me-2" width="16" height="16">
                             <use xlink:href="#speedometer2"></use>
                         </svg>
-                        Assignments
+                        Notifications
                     </a>
+                </li>
+                <a id="student_assignment_button" href="#" class="nav-link link-dark">
+                    <svg class="bi me-2" width="16" height="16">
+                        <use xlink:href="#speedometer2"></use>
+                    </svg>
+                    Assignments
+                </a>
                 </li>
             </ul>
             <hr>
@@ -89,6 +97,38 @@
             </div>
             {% endfor %}
         </div>
+        <div id="student_notification" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
+            <h5>Notifications</h5>
+            {% if request.notifications %}
+            {% for notification in request.notifications %}
+            {% if notification.template == 'ANAATY' %}
+            <div>
+                <h6>
+                    A new assignment [{% for worksheet in notification.assignment.worksheet.all %}
+                    {{worksheet.worksheet_name}} | {{worksheet.standard}} | {{worksheet.subject}} | {{worksheet.chapter}}
+                    {% endfor %}
+                    ] has been alloted to you by {% for user in notification.belongs_to.all %}
+                    {{user.TeacherProfile.first_name }} {{user.TeacherProfile.last_name }}
+                    {% endfor %}
+                    <small class="mt-0 ml-3"><i> {{notification.time_stamp | naturaltime}}</i></small>
+                </h6>
+            </div>
+            {% elif notification.template == 'AYR'%}
+            <div>
+                <h6>
+                    {% for user in notification.belongs_to.all %}
+                    {{user.SchoolProfile.name }}
+                    {% endfor %}
+                    accepted your request
+                    <small class="mt-0 ml-3"><i> {{notification.time_stamp | naturaltime}}</i></small>
+                </h6>
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% else %}
+            <h7>No Notification</h7>
+            {% endif %}
+        </div>
     </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -96,17 +136,36 @@
 $(document).on('click', '#student_profile_button', function(event) {
     document.getElementById("student_profile").style.display = "block";
     document.getElementById("student_assignment").style.display = "none";
+    document.getElementById("student_notification").style.display = "none";
+
 
     document.getElementById("student_profile_button").className = "nav-link active";
     document.getElementById("student_assignment_button").className = "nav-link link-dark";
+    document.getElementById("student_notification_button").className = "nav-link link-dark";
+
 
 });
 $(document).on('click', '#student_assignment_button', function(event) {
     document.getElementById("student_profile").style.display = "none";
     document.getElementById("student_assignment").style.display = "block";
+    document.getElementById("student_notification").style.display = "none";
+
 
     document.getElementById("student_profile_button").className = "nav-link link-dark";
     document.getElementById("student_assignment_button").className = "nav-link active";
+    document.getElementById("student_notification_button").className = "nav-link link-dark";
+
+});
+$(document).on('click', '#student_notification_button', function(event) {
+    document.getElementById("student_profile").style.display = "none";
+    document.getElementById("student_assignment").style.display = "none";
+    document.getElementById("student_notification").style.display = "block";
+
+
+    document.getElementById("student_profile_button").className = "nav-link link-dark";
+    document.getElementById("student_assignment_button").className = "nav-link link-dark";
+    document.getElementById("student_notification_button").className = "nav-link active";
+
 });
 
 $(document).on('click', '#mark_as_done_btn', function(event) {

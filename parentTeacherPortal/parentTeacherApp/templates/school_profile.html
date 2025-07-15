@@ -185,7 +185,7 @@
                             <div class="school-hero-item"><i class="fa-solid fa-city"></i> <span>{{request.user.SchoolProfile.city}}</span></div>
                             <div class="school-hero-item"><i class="fa-solid fa-map-marker-alt"></i> <span>{{request.user.SchoolProfile.state}}</span></div>
                         </div>
-                        <a href="/edit_school/{{SchoolProfile.user.id}}" class="school-hero-edit-btn">Edit School</a>
+                        <a href="/edit_school/{{request.user.SchoolProfile.user.id}}" class="school-hero-edit-btn">Edit School</a>
                     </div>
                 </div>
             </section>

@@ -25,4 +25,5 @@ urlpatterns = [
     path('load', views.display_words, name='load'),
     path('add_workbook', views.add_workbook, name='add_workbook'),
     path('mark_as_done', views.mark_as_done, name='mark_as_done'),
+    path('notification_seen', views.notification_seen, name='notification_seen'),
 ]

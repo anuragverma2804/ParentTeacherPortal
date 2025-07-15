@@ -1,4 +1,3 @@
-
 from datetime import datetime
 import os
 from django.conf import settings
@@ -7,7 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.serializers import json
 import json
-
+from .utility import notifications
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, AnonymousUser
@@ -16,7 +15,7 @@ from django.template.defaultfilters import lower
 from django.templatetags.static import static
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import TeacherProfile, StudentProfile, SchoolProfile, Worksheet, Assignment
+from .models import TeacherProfile, StudentProfile, SchoolProfile, Worksheet, Assignment, Notification
 
 
 def home(request):
@@ -28,12 +27,15 @@ def home(request):
             for i in school_profile_list:
                 if request.user in i.teacher_requests.all():
                     request.school_request = i
+        assignments = Assignment.objects.filter(assigned_by=request.user)
+        request.assignments = assignments
+        request.notifications = Notification.objects.filter(user=request.user)
         return render(request, 'teacher_profile.html')
     elif request.user.username.split("_", 1)[1] == 'school':
         request.worksheet = Worksheet.objects.all()
         return render(request, 'school_profile.html')
     elif request.user.username.split("_", 1)[1] == 'student':
-        assignments = Assignment.objects.filter
+        request.notifications = Notification.objects.filter(user=request.user)
         return render(request, 'student_profile.html')
     else:
         return redirect('login')
@@ -177,11 +179,13 @@ def accept_requests(request):
             schoolprofile.teachers.add(user)
             user.TeacherProfile.teacher_school = schoolprofile
             user.TeacherProfile.save()
+            notifications(user=user, user2=schoolprofile.user, Type="AYR")
         elif user.username.split("_", 1)[1] == 'student':
             schoolprofile.student_requests.remove(user)
             schoolprofile.students.add(user)
             user.StudentProfile.student_school = schoolprofile
             user.StudentProfile.save()
+            notifications(user=user, user2=schoolprofile.user, Type="AYR")
     return HttpResponse(request.POST.get('user_id'))
 
 
@@ -286,6 +290,8 @@ def assign_class_subject(request):
             map = {request.POST.get("standard"): [request.POST.get("subject")]}
             teacher_profile.class_subject_map.update(map)
             teacher_profile.save()
+        notifications(user=teacher_profile.user, user2=request.user, Type="YHBA", standard=standard,
+                      subject=request.POST.get("subject"))
     return HttpResponse("response")
 
 
@@ -330,6 +336,7 @@ def add_workbook(request):
         schoolprofile.school_workbooks.add(worksheet)
         schoolprofile.save()
     return HttpResponse("Done")
+
 
 @csrf_exempt
 def remove_workbook(request):
@@ -390,10 +397,12 @@ def assign_worksheet(request):
             teacherprofile = TeacherProfile.objects.get(teacher_id=request.POST.get("teacher_id"))
             teacherprofile.teacher_workbooks.add(Worksheet.objects.get(worksheet_id=request.POST.get("worksheet_id")))
             teacherprofile.save()
+            notifications(user=teacherprofile.user, user2=request.user, Type="ANWATY",
+                          worksheet=Worksheet.objects.get(worksheet_id=request.POST.get("worksheet_id")))
         if request.user.username.split("_", 1)[1] == 'teacher':
             worksheet = Worksheet.objects.get(worksheet_id=request.POST.get("worksheet_id"))
             assignment = Assignment.objects.create(standard=worksheet.standard, subject=worksheet.subject,
-                                                   due_date=request.POST.get('duedate'))
+                                                   assigned_by=request.user, due_date=request.POST.get('duedate'))
             assignment.worksheet.add(worksheet)
             assignment.save()
             students = StudentProfile.objects.filter(standard=worksheet.standard)
@@ -402,6 +411,7 @@ def assign_worksheet(request):
                 student.student_assignment_list.add(assignment)
                 student.save()
                 assignment.save()
+                notifications(user=student.user, user2=request.user, Type="ANAATY", assignment=assignment)
     return HttpResponse("done")
 
 
@@ -413,4 +423,15 @@ def mark_as_done(request):
         assignment = Assignment.objects.get(assignment_id=request.POST.get("assignment_id"))
         assignment.submit_status.add(request.user)
         assignment.save()
+        notifications(user=assignment.assigned_by, Type="FCSAC", user2=request.user, assignment=assignment)
+    return HttpResponse("done")
+
+
+@csrf_exempt
+def notification_seen(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method == 'POST':
+        for notification in Notification.objects.filter(user=request.user).exclude(status=True):
+            notification.status = True
     return HttpResponse("done")

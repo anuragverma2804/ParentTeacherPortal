@@ -20,6 +20,8 @@ class Assignment(models.Model):
     worksheet = models.ManyToManyField(Worksheet, related_name="Worksheet")
     assigned_student = models.ManyToManyField(User, related_name="assigned_student")
     submit_status = models.ManyToManyField(User, related_name="submit_status")
+    assigned_by = models.ForeignKey(User, related_name="assigned_by", on_delete=models.CASCADE, null=False,
+                                       default=None)
     due_date = models.DateTimeField()
 
     objects = models.Manager()
@@ -78,3 +80,20 @@ class TeacherProfile(models.Model):
                                        blank=True, on_delete=models.CASCADE)
 
     objects = models.Manager()
+
+
+class Notification(models.Model):
+    notification_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    belongs_to = models.ManyToManyField(User, related_name='belongs_to', blank=True)
+    template = models.TextField()
+    time_stamp = models.DateTimeField(auto_now_add=True)
+    status = models.BooleanField(default=False, blank=False)
+    worksheet = models.ForeignKey(Worksheet, on_delete=models.CASCADE, blank=True, default=None, null=True)
+    assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE, blank=True, default=None, null=True)
+    standard = models.CharField(max_length=5, blank=False, default=None, null=True)
+    subject = models.CharField(max_length=10, blank=False, default=None, null=True)
+    objects = models.Manager()
+
+    class Meta:
+        ordering = ('-time_stamp',)

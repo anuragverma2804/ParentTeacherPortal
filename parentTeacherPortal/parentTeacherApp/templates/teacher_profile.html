@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <title>Teacher || {{request.user.TeacherProfile.first_name}} {{request.user.TeacherProfile.last_name}}</title>
 </head>
+{% load humanize %}
 
 <body>
     <div class="row">
@@ -52,6 +53,14 @@
                         Assign Workbook
                     </a>
                 </li>
+                <li>
+                    <a id="notification_button" href="#" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#grid"></use>
+                        </svg>
+                        Notification <small id="notification_unseen_count">(3)</small>
+                    </a>
+                </li>
             </ul>
             <hr>
             <a href="/logout_user" class="btn btn-danger w-100 mt-2 fw-bold rounded-pill shadow shadow-lg d-flex align-items-center justify-content-center gap-2" style="letter-spacing:1px; font-size:1.1rem; border-width:2px; background: linear-gradient(90deg,#f7971e 0%,#ffd200 100%); border:none;">
@@ -89,18 +98,18 @@
                             <div class="col-auto">
                                 <div class="bg-white rounded-4 p-3 shadow-sm border border-2 border-warning-subtle">
                                     <h5 class="mb-2 text-warning">Class Subjects</h5>
-<div class="d-flex flex-column gap-2 align-items-start">
-    {% for standard, subject_list in request.user.TeacherProfile.class_subject_map.items %}
-        <div class="mb-2">
-            <span class="fw-bold text-primary" style="font-size:1.1rem;">Class {{ standard }}:</span>
-            <span>
-                {% for subject in subject_list %}
-                    <span class="badge rounded-pill bg-warning text-dark px-3 py-2 ms-2 mb-1" style="font-size:1rem;">{{ subject }}</span>
-                {% endfor %}
-            </span>
-        </div>
-    {% endfor %}
-</div>
+                                    <div class="d-flex flex-column gap-2 align-items-start">
+                                        {% for standard, subject_list in request.user.TeacherProfile.class_subject_map.items %}
+                                        <div class="mb-2">
+                                            <span class="fw-bold text-primary" style="font-size:1.1rem;">Class {{ standard }}:</span>
+                                            <span>
+                                                {% for subject in subject_list %}
+                                                <span class="badge rounded-pill bg-warning text-dark px-3 py-2 ms-2 mb-1" style="font-size:1rem;">{{ subject }}</span>
+                                                {% endfor %}
+                                            </span>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -113,7 +122,7 @@
             <div class="glass-card p-4" style="position:relative; z-index:1; overflow:hidden;">
                 <h3 class="fw-bold mb-4 text-center" style="color:#f7971e; letter-spacing:1px;">Assignments</h3>
                 <div class="row justify-content-center g-4">
-                    {% for i in request.user.TeacherProfile.teacher_workbooks.all %}
+                    {% for i in request.assignments %}
                     <div class="col-12 col-md-6 col-lg-4 d-flex align-items-stretch">
                         <div class="assignment-card w-100 p-4 mb-3 shadow glass-card position-relative" style="border-left: 8px solid #ffd200;">
                             <div class="d-flex align-items-center mb-2">
@@ -126,14 +135,23 @@
                                 </div>
                             </div>
                             <div class="mt-2">
-                                <span class="badge bg-warning text-dark px-3 py-2" style="font-size:1rem;">Due: 
+                                <span class="badge bg-warning text-dark px-3 py-2" style="font-size:1rem;">Due:
                                     {% if i.due_date %}
-                                        {{ i.due_date|date:'M d, Y H:i' }}
+                                    {{ i.due_date|date:'M d, Y H:i' }}
                                     {% else %}
-                                        <span class="text-muted">No due date</span>
+                                    <span class="text-muted">No due date</span>
                                     {% endif %}
                                 </span>
                             </div>
+                            {% if i.submit_status.all %}
+                            <div class="mt-2 badge bg-success text-dark">
+                                <span>Submitted by:-
+                                    {% for student in i.submit_status.all %}
+                                    <span>{{student.StudentProfile.first_name}} {{student.StudentProfile.last_name}}</span>
+                                    {% endfor %}
+                                </span>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                     {% empty %}
@@ -197,68 +215,132 @@
                 </div>
             </div>
         </div>
+        <div id="teacher_notification" style="display:none;" class="col  card my-2 py-3 px-3 my-3 mx-3">
+            <h5>Notifications </h5>
+            {% if request.notifications %}
+            {% for notification in request.notifications %}
+            {% if notification.template == 'ANWATY' %}
+            <div class="alert  alert-info glass-card">
+                <h6>
+                    A new worksheet [
+                    {{notification.worksheet.worksheet_name}} | {{notification.worksheet.standard}} | {{notification.worksheet.subject}} | {{notification.worksheet.chapter}} ]
+                    has been alloted to you by {% for user in notification.belongs_to.all %}
+                    {{user.SchoolProfile.name }}
+                    {% endfor %}
+                    <small class="mt-0 ml-3"><i> {{notification.time_stamp | naturaltime}}</i></small>
+                </h6>
+            </div>
+            {% elif notification.template == 'AYR' %}
+            <div class="alert alert-info glass-card">
+                <h6>
+                    {% for user in notification.belongs_to.all %}
+                    {{user.SchoolProfile.name }}
+                    {% endfor %}
+                    accepted your request
+                    <small class="mt-0 ml-3"><i> {{notification.time_stamp | naturaltime}}</i></small>
+                </h6>
+            </div>
+            {% elif notification.template == 'FCSAC' %}
+            <div class="alert alert-info glass-card">
+                <h6>
+                    {% for user in notification.belongs_to.all %}
+                    {{user.StudentProfile.first_name }} {{user.StudentProfile.last_name }} from class {{user.StudentProfile.standard}} submitted
+                    {% endfor %}
+                    [{% for worksheet in notification.assignment.worksheet.all %}
+                    {{worksheet.worksheet_name}} | {{worksheet.standard}} | {{worksheet.subject}} | {{worksheet.chapter}}
+                    {% endfor %}]
+                    <small class="mt-0 ml-3"><i> {{notification.time_stamp | naturaltime}}</i></small>
+                </h6>
+            </div>
+            {% elif notification.template == 'YHBA' %}
+            <div class="alert  alert-info glass-card">
+                <h6>You have been alloted
+                    {{notification.subject}} in {{notification.standard}}
+                    <small class="mt-0 ml-3"><i> {{notification.time_stamp | naturaltime}}</i></small>
+                </h6>
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% else %}
+            <h7>No Notification</h7>
+            {% endif %}
+        </div>
     </div>
     <style>
-        body {
-            background: url('https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat fixed;
-            min-height: 100vh;
-            font-family: 'Nunito', 'Segoe UI', 'Comic Sans MS', cursive, sans-serif;
-        }
-        .glass-card {
-            background: rgba(255,255,255,0.93);
-            border-radius: 2rem;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.18);
-        }
-        .glow-bg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0;
-            background: radial-gradient(circle at 80% 20%, #f7971e33 0%, #ffd20011 60%, transparent 100%);
-            pointer-events: none;
-        }
-        .user_img {
-            box-shadow: 0 4px 16px 0 #ffd20044;
-            border: 3px solid #f7971e33;
-        }
-        .card h4, .card h5, .card h6 {
-            color: #f7971e;
-            font-weight: bold;
-        }
-        .btn-primary {
-            background: linear-gradient(90deg, #f7971e 0%, #ffd200 100%);
-            border: none;
-            color: #fff;
-            font-weight: bold;
-            box-shadow: 0 2px 8px 0 #ffd20033;
-        }
-        .btn-primary:hover {
-            background: linear-gradient(90deg, #ffd200 0%, #f7971e 100%);
-            color: #fff;
-        }
-        .assignment-card {
-            background: rgba(255,255,255,0.97);
-            border-radius: 1.5rem;
-            box-shadow: 0 4px 24px 0 #ffd20022;
-            transition: transform 0.15s, box-shadow 0.15s;
-            border: 1.5px solid #ffd20033;
-        }
-        .assignment-card:hover {
-            transform: translateY(-4px) scale(1.03);
-            box-shadow: 0 8px 32px 0 #ffd20044;
-            border-color: #f7971e99;
-        }
-        .assignment-icon {
-            background: linear-gradient(135deg, #ffd20033 0%, #f7971e22 100%);
-            border-radius: 1rem;
-            padding: 0.5rem 0.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 8px #ffd20022;
-        }
+    body {
+        background: url('https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat fixed;
+        min-height: 100vh;
+        font-family: 'Nunito', 'Segoe UI', 'Comic Sans MS', cursive, sans-serif;
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.93);
+        border-radius: 2rem;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .glow-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        background: radial-gradient(circle at 80% 20%, #f7971e33 0%, #ffd20011 60%, transparent 100%);
+        pointer-events: none;
+    }
+
+    .user_img {
+        box-shadow: 0 4px 16px 0 #ffd20044;
+        border: 3px solid #f7971e33;
+    }
+
+    .card h4,
+    .card h5,
+    .card h6 {
+        color: #f7971e;
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background: linear-gradient(90deg, #f7971e 0%, #ffd200 100%);
+        border: none;
+        color: #fff;
+        font-weight: bold;
+        box-shadow: 0 2px 8px 0 #ffd20033;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(90deg, #ffd200 0%, #f7971e 100%);
+        color: #fff;
+    }
+
+    .assignment-card {
+        background: rgba(255, 255, 255, 0.97);
+        border-radius: 1.5rem;
+        box-shadow: 0 4px 24px 0 #ffd20022;
+        transition: transform 0.15s, box-shadow 0.15s;
+        border: 1.5px solid #ffd20033;
+    }
+
+    .assignment-card:hover {
+        transform: translateY(-4px) scale(1.03);
+        box-shadow: 0 8px 32px 0 #ffd20044;
+        border-color: #f7971e99;
+    }
+
+    .assignment-icon {
+        background: linear-gradient(135deg, #ffd20033 0%, #f7971e22 100%);
+        border-radius: 1rem;
+        padding: 0.5rem 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px #ffd20022;
+    }
     </style>
 </body>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -268,13 +350,18 @@ $(document).on('click', '#teacher_profile_button', function(event) {
     document.getElementById("teacher_assignment").style.display = "none";
     document.getElementById("teacher_join_school").style.display = "none";
     document.getElementById("teacher_assign_workbook").style.display = "none";
+    document.getElementById("teacher_notification").style.display = "none";
+
 
 
 
     document.getElementById("teacher_profile_button").className = "nav-link active";
     document.getElementById("teacher_assignment_button").className = "nav-link link-dark";
-    document.getElementById("teacher_join_school_button").className = "nav-link link-dark";
     document.getElementById("assign_workbook_button").className = "nav-link link-dark";
+    document.getElementById("notification_button").className = "nav-link link-dark";
+    document.getElementById("teacher_join_school_button").className = "nav-link link-dark";
+
+
 
 
 
@@ -284,13 +371,18 @@ $(document).on('click', '#teacher_assignment_button', function(event) {
     document.getElementById("teacher_assignment").style.display = "block";
     document.getElementById("teacher_join_school").style.display = "none";
     document.getElementById("teacher_assign_workbook").style.display = "none";
+    document.getElementById("teacher_notification").style.display = "none";
+
 
 
 
     document.getElementById("teacher_profile_button").className = "nav-link link-dark";
     document.getElementById("teacher_assignment_button").className = "nav-link active";
-    document.getElementById("teacher_join_school_button").className = "nav-link link-dark";
     document.getElementById("assign_workbook_button").className = "nav-link link-dark";
+    document.getElementById("notification_button").className = "nav-link link-dark";
+    document.getElementById("teacher_join_school_button").className = "nav-link link-dark";
+
+
 
 
 });
@@ -299,13 +391,18 @@ $(document).on('click', '#teacher_join_school_button', function(event) {
     document.getElementById("teacher_assignment").style.display = "none";
     document.getElementById("teacher_join_school").style.display = "block";
     document.getElementById("teacher_assign_workbook").style.display = "none";
+    document.getElementById("teacher_notification").style.display = "none";
+
 
 
 
     document.getElementById("teacher_profile_button").className = "nav-link link-dark";
     document.getElementById("teacher_assignment_button").className = "nav-link link-dark";
-    document.getElementById("teacher_join_school_button").className = "nav-link active";
     document.getElementById("assign_workbook_button").className = "nav-link link-dark";
+    document.getElementById("notification_button").className = "nav-link link-dark";
+    document.getElementById("teacher_join_school_button").className = "nav-link active";
+
+
 
 
 });
@@ -314,13 +411,40 @@ $(document).on('click', '#assign_workbook_button', function(event) {
     document.getElementById("teacher_assignment").style.display = "none";
     document.getElementById("teacher_join_school").style.display = "none";
     document.getElementById("teacher_assign_workbook").style.display = "block";
+    document.getElementById("teacher_notification").style.display = "none";
+
+
 
 
 
     document.getElementById("teacher_profile_button").className = "nav-link link-dark";
     document.getElementById("teacher_assignment_button").className = "nav-link link-dark";
-    document.getElementById("teacher_join_school_button").className = "nav-link link-dark";
     document.getElementById("assign_workbook_button").className = "nav-link active";
+    document.getElementById("notification_button").className = "nav-link link-dark";
+    document.getElementById("teacher_join_school_button").className = "nav-link link-dark";
+
+
+
+
+});
+$(document).on('click', '#notification_button', function(event) {
+    document.getElementById("teacher_profile").style.display = "none";
+    document.getElementById("teacher_assignment").style.display = "none";
+    document.getElementById("teacher_join_school").style.display = "none";
+    document.getElementById("teacher_assign_workbook").style.display = "none";
+    document.getElementById("teacher_notification").style.display = "block";
+    // notification(event);
+
+
+
+
+    document.getElementById("teacher_profile_button").className = "nav-link link-dark";
+    document.getElementById("teacher_assignment_button").className = "nav-link link-dark";
+    document.getElementById("assign_workbook_button").className = "nav-link link-dark";
+    document.getElementById("notification_button").className = "nav-link active";
+    document.getElementById("teacher_join_school_button").className = "nav-link link-dark";
+
+
 
 
 });
@@ -366,7 +490,7 @@ $('#standard').on('change', function(event) {
     var user_standard = $('#standard').val();
     $("#subject").empty();
     $("#subject").append(`<option selected disabled>Subjects</option>`);
-    var subject_list = ({{ request.user.TeacherProfile.class_subject_map | safe }}) [user_standard];
+    var subject_list = ({{ request.user.TeacherProfile.class_subject_map | safe }})[user_standard];
     for (subject in school_list) {
         if (subject_list[subject] != undefined) {
             optionHTML = `<option value="${subject_list[subject]}" >${subject_list[subject]}</option>`
@@ -410,27 +534,39 @@ $(document).on('click', '#allot_worksheet', function(event) {
         'duedate': $('#duedate').val()
     };
     $.ajax({
-        type: 'POST',
-        url: '/assign_worksheet',
-        data: ldata,
-        encode: true
-    })
-    .done(function(data) {
-        // Show a success message to the user
-        $("#teacher_assign_workbook").prepend('<div class="alert alert-success mt-2" role="alert">Workbook assigned successfully!</div>');
-        // Optionally, clear the form fields
-        $('#standard').prop('selectedIndex',0);
-        $('#subject').empty().append('<option selected disabled>Subjects</option>');
-        $('#worksheet').empty().append('<option selected disabled>Worksheets</option>');
-        $('#duedate').val('');
-        // Remove the message after a few seconds
-        setTimeout(function() { $("#teacher_assign_workbook .alert-success").fadeOut(500, function() { $(this).remove(); }); }, 2500);
-    })
-    .fail(function() {
-        $("#teacher_assign_workbook").prepend('<div class="alert alert-danger mt-2" role="alert">Failed to assign workbook. Please try again.</div>');
-        setTimeout(function() { $("#teacher_assign_workbook .alert-danger").fadeOut(500, function() { $(this).remove(); }); }, 2500);
-    });
+            type: 'POST',
+            url: '/assign_worksheet',
+            data: ldata,
+            encode: true
+        })
+        .done(function(data) {
+            // Show a success message to the user
+            $("#teacher_assign_workbook").prepend('<div class="alert alert-success mt-2" role="alert">Workbook assigned successfully!</div>');
+            // Optionally, clear the form fields
+            $('#standard').prop('selectedIndex', 0);
+            $('#subject').empty().append('<option selected disabled>Subjects</option>');
+            $('#worksheet').empty().append('<option selected disabled>Worksheets</option>');
+            $('#duedate').val('');
+            // Remove the message after a few seconds
+            setTimeout(function() { $("#teacher_assign_workbook .alert-success").fadeOut(500, function() { $(this).remove(); }); }, 2500);
+        })
+        .fail(function() {
+            $("#teacher_assign_workbook").prepend('<div class="alert alert-danger mt-2" role="alert">Failed to assign workbook. Please try again.</div>');
+            setTimeout(function() { $("#teacher_assign_workbook .alert-danger").fadeOut(500, function() { $(this).remove(); }); }, 2500);
+        });
 });
+
+function notification(event) {
+    $.ajax({
+            type: 'POST',
+            url: '/notification_seen',
+            data: ldata,
+            encode: true
+        })
+        .done(function(data) {
+
+        });
+}
 </script>
 
 </html>
